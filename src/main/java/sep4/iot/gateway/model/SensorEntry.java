@@ -1,8 +1,9 @@
 package sep4.iot.gateway.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SensorEntry {
+public class SensorEntry implements Serializable {
     private int entry_key;
     private int user_key;
     private String hweui;

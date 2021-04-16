@@ -37,4 +37,13 @@ public class SensorDataController {
         }
     }
 
+    //CRUD-Create
+    public void createNewUserThread(@RequestBody final HardwareUser user){
+        try {
+            service.createNewUserThread(user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
