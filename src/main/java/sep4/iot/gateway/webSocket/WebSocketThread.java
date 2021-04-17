@@ -1,17 +1,11 @@
 package sep4.iot.gateway.webSocket;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.json.JSONException;
 import org.json.JSONObject;
 import sep4.iot.gateway.model.SensorEntry;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -48,6 +42,8 @@ public class WebSocketThread implements Runnable{
                 //TODO: read info from queue and post it to the server application server
 
                 SensorEntry sensorEntry = new SensorEntry();
+                sensorEntry.setUser_key(user_key);
+
                 ObjectWriter objectWriter = new ObjectMapper().writer();
                 String json = null;
                 try {
