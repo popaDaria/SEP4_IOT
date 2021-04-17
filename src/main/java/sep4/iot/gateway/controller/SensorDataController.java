@@ -38,6 +38,7 @@ public class SensorDataController {
     }
 
     //CRUD-Create
+    @PostMapping
     public void createNewUserThread(@RequestBody final HardwareUser user){
         try {
             service.createNewUserThread(user);

@@ -39,7 +39,7 @@ public class WebSocketThread implements Runnable{
             String upLinkMessage = webSocketClient.getUpLink();
             if(upLinkMessage!=null){
 
-                //TODO: read info from queue and post it to the server application server
+                //TODO: read info from queue and post it to the application server
 
                 SensorEntry sensorEntry = new SensorEntry();
                 sensorEntry.setUser_key(user_key);
@@ -52,7 +52,7 @@ public class WebSocketThread implements Runnable{
                     e.printStackTrace();
                 }
 
-                //TODO: set uri
+                //TODO: set uri to app server one
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .POST(HttpRequest.BodyPublishers.ofString(json))
