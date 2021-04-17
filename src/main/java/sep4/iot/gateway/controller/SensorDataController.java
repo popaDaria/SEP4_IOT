@@ -1,10 +1,7 @@
 package sep4.iot.gateway.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sep4.iot.gateway.model.HardwareUser;
 import sep4.iot.gateway.model.SensorEntry;
 import sep4.iot.gateway.service.SensorDataService;
@@ -17,6 +14,7 @@ public class SensorDataController {
     SensorDataService service;
 
     //CRUD-Retrieve
+    @GetMapping
     public SensorEntry getSensorEntry(@RequestBody final HardwareUser user){
         try {
             SensorEntry entry = service.getSensorEntry(user);
