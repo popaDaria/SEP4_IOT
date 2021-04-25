@@ -27,14 +27,15 @@ public class WebSocketClient implements WebSocket.Listener {
     }
 
     public String getUpLink(){
-        String ret=null ;
+        /*String ret=null ;
         if(list!=null){
             if(list.size()!=0){
                 ret = list.get(0);
                 list.remove(0);
             }
         }
-        return ret;
+        return ret;*/
+        return dataQueue.poll();
     }
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
@@ -84,11 +85,10 @@ public class WebSocketClient implements WebSocket.Listener {
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
         try {
-            //todo: might have to indent by 5 spaces
             indented = (new JSONObject(data.toString())).toString(5);
             //System.out.println(indented);
-            list.add(indented);
-            //dataQueue.add(data.toString());
+            //list.add(indented);
+            dataQueue.add(data.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

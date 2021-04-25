@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
@@ -44,12 +45,55 @@ public class WebSocketThread implements Runnable{
                 //TODO: read info from queue and post it to the application server
 
                 System.out.println("SENSOR ENTRY DATA: "+upLinkMessage);
+                /*
+                eg:{
+                    "rssi": -116,
+                    "seqno": 39,
+                    "data": "000d0018026bda02",
+                    "toa": 0,
+                    "freq": 867300000,
+                    "ack": false,
+                    "fcnt": 0,
+                    "dr": "SF12 BW125 4\/5",
+                    "offline": false,
+                    "bat": 255,
+                    "port": 1,
+                    "snr": -13,
+                    "EUI": "0004A30B002528D3",
+                    "cmd": "rx",
+                    "ts": 1619347683413
+                }
+                */
+
+                String[] lines = upLinkMessage.split(",");
+                String dataLine="", tsLine="";
+                for (String str:lines) {
+                    if(str.contains("data")){
+                        dataLine=str;
+                    }else if(str.contains("ts")){
+                        tsLine=str;
+                    }
+                }
+                dataLine = dataLine.split("\"")[2];
+                char[] data = dataLine.toCharArray();
+
+                tsLine = tsLine.split(":")[1].trim();
+                //Date date = new Date(Integer.parseInt(tsLine));
 
                 SensorEntry sensorEntry = new SensorEntry();
                 sensorEntry.setUser_key(user_key);
-                sensorEntry.setEntry_time(new Date());
+                sensorEntry.setEntry_time(Integer.parseInt(tsLine));
 
-                //System.out.println("RECEIVED SENSOR ENTRY: "+sensorEntry.toString());
+                int hum=Integer.parseInt(data[0]+data[1]+"");
+                int temp=Integer.parseInt(data[2]+data[3]+"");
+                sensorEntry.setAir_co2(Integer.parseInt(data[4]+data[5]+""));
+                int light=Integer.parseInt(data[6]+data[7]+"");
+
+                sensorEntry.setAir_humidity(hum);
+                sensorEntry.setAir_temperature(temp);
+                sensorEntry.setLight_level(light);
+
+                System.out.println("RECEIVED SENSOR ENTRY: "+sensorEntry.toString());
 
                 ObjectWriter objectWriter = new ObjectMapper().writer();
                 String json = null;
@@ -68,15 +112,15 @@ public class WebSocketThread implements Runnable{
 
                 System.out.println("HTTP Req: "+request.toString());
 
-               /* try {
+                try {
                     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                     System.out.println(response.statusCode());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                */
+
             }else{
-                System.out.println("Null value");
+                System.out.println(user_key+ " waiting for info...");
             }
         }
 
