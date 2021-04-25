@@ -149,4 +149,22 @@ public class SensorEntry implements Serializable {
     public void setLight_level(float light_level) {
         this.light_level = light_level;
     }
+
+    @Override
+    public String toString() {
+        return "SensorEntry{" +
+                "entry_key=" + entry_key +
+                ", user_key=" + user_key +
+                ", hweui='" + hweui + '\'' +
+                ", entry_time=" + entry_time +
+                ", air_temperature=" + air_temperature +
+                ", air_humidity=" + air_humidity +
+                ", air_co2=" + air_co2 +
+                ", light_level=" + light_level +
+                ", desired_air_temperature=" + desired_air_temperature +
+                ", desired_air_humidity=" + desired_air_humidity +
+                ", desired_air_co2=" + desired_air_co2 +
+                ", desired_light_level=" + desired_light_level +
+                '}';
+    }
 }

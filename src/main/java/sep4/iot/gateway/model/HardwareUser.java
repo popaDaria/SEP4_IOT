@@ -1,9 +1,14 @@
 package sep4.iot.gateway.model;
 
-public class HardwareUser {
+import java.io.Serializable;
+
+public class HardwareUser implements Serializable {
     private int user_key;
     private String appToken;
 
+    public HardwareUser(){
+
+    }
     public HardwareUser(int user_key, String appToken) {
         this.user_key = user_key;
         this.appToken = appToken;

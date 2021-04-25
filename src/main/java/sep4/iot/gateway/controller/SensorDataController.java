@@ -26,6 +26,7 @@ public class SensorDataController {
     }
 
     //CRUD-Create
+    @RequestMapping("/updateData")
     @PostMapping
     public void sendDataToSensor(@RequestBody final SensorEntry sensorEntry){
         try {
@@ -36,13 +37,24 @@ public class SensorDataController {
     }
 
     //CRUD-Create
-    @PostMapping
+    @PostMapping("/{user_key}")
+    @ResponseBody
+    public void createNewUserThread(@PathVariable("user_key") final String user_key){
+        try {
+            int id = Integer.parseInt(user_key);
+            service.createNewUserThread(id);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+/*    @PostMapping
     public void createNewUserThread(@RequestBody final HardwareUser user){
         try {
             service.createNewUserThread(user);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 
 }

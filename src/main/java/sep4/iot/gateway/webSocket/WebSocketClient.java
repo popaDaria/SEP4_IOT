@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -17,6 +18,7 @@ public class WebSocketClient implements WebSocket.Listener {
 
     private WebSocket server = null;
     private Queue<String> dataQueue;
+    private ArrayList<String> list;
 
     // Send down-link message to device
     // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
@@ -25,13 +27,20 @@ public class WebSocketClient implements WebSocket.Listener {
     }
 
     public String getUpLink(){
-        return dataQueue.poll();
+        String ret=null ;
+        if(list!=null){
+            if(list.size()!=0){
+                ret = list.get(0);
+                list.remove(0);
+            }
+        }
+        return ret;
     }
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
-    // Substitute ????????????????? with the token you have been given
     public WebSocketClient(String url) {
         dataQueue = new SynchronousQueue<>();
+        list = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                 .buildAsync(URI.create(url), this);
@@ -49,7 +58,7 @@ public class WebSocketClient implements WebSocket.Listener {
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("A " + error.getCause() + " exception was thrown.");
         System.out.println("Message: " + error.getLocalizedMessage());
-        webSocket.abort();
+        //webSocket.abort();
     };
     //onClose()
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
@@ -75,12 +84,15 @@ public class WebSocketClient implements WebSocket.Listener {
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
         try {
-            indented = (new JSONObject(data.toString())).toString(4);
-            dataQueue.add(data.toString());
+            //todo: might have to indent by 5 spaces
+            indented = (new JSONObject(data.toString())).toString(5);
+            //System.out.println(indented);
+            list.add(indented);
+            //dataQueue.add(data.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(indented);
+        //System.out.println(indented);
         webSocket.request(1);
         return new CompletableFuture().completedFuture("onText() completed.").thenAccept(System.out::println);
     };

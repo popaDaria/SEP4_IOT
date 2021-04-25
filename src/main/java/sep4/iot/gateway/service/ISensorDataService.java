@@ -7,5 +7,7 @@ public interface ISensorDataService {
 
     SensorEntry getSensorEntry(HardwareUser user);
     void sendDataToSensor(SensorEntry sensorEntry);
-    void createNewUserThread(HardwareUser user);
+    //void createNewUserThread(HardwareUser user);
+    void createNewUserThread(int user_key);
+
 }

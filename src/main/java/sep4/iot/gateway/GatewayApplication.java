@@ -2,6 +2,7 @@ package sep4.iot.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import sep4.iot.gateway.model.HardwareUser;
 
 @SpringBootApplication
 public class GatewayApplication {
