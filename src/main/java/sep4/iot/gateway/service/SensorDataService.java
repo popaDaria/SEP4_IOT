@@ -6,34 +6,45 @@ import sep4.iot.gateway.model.SensorEntry;
 import sep4.iot.gateway.persistance.UserThreadFile;
 import sep4.iot.gateway.webSocket.WebSocketThread;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 @Service
 public class SensorDataService implements ISensorDataService{
 
-    private WebSocketThread webSocketThread;
+    //private WebSocketThread webSocketThread;
     public static ExecutorService executorService ;
-    private UserThreadFile persistance;
+    private final UserThreadFile persistence;
+    private ArrayList<WebSocketThread> threads = new ArrayList<>();
 
     public SensorDataService() {
         if(executorService==null)
             executorService=new ScheduledThreadPoolExecutor(10); //base size for now
-        persistance = new UserThreadFile();
+        persistence = new UserThreadFile();
         initialiseThreads();
+        threads= new ArrayList<>();
     }
 
     private void initialiseThreads(){
-        for (HardwareUser user: persistance.getAllThreads()) {
+        for (HardwareUser user: persistence.getAllThreads()) {
             String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
-            webSocketThread = new WebSocketThread(url, user.getUser_key());
+            WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
+            threads.add(webSocketThread);
             executorService.submit(webSocketThread);
         }
     }
 
     @Override
-    public SensorEntry getSensorEntry(HardwareUser user) {
-        return null;
+    public ArrayList<SensorEntry> getSensorEntry(HardwareUser user) {
+        ArrayList<SensorEntry> info = new ArrayList<>();
+        for (WebSocketThread hd: threads) {
+            if(hd.getUser_key()==user.getUser_key()){
+                info = hd.getSensorEntries();
+                hd.clearSensorEntries();
+            }
+        }
+        return info;
     }
 
     @Override
@@ -43,11 +54,12 @@ public class SensorDataService implements ISensorDataService{
     @Override
     public void createNewUserThread(int user_key) {
         //hardcoded url for now
-        if(!persistance.isUserThreadStarted(user_key)) {
+        if(!persistence.isUserThreadStarted(user_key)) {
             String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
             HardwareUser user = new HardwareUser(user_key, "vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0");
-            persistance.addThread(user);
-            webSocketThread = new WebSocketThread(url, user_key);
+            persistence.addThread(user);
+            WebSocketThread webSocketThread = new WebSocketThread(url, user_key);
+            threads.add(webSocketThread);
             executorService.submit(webSocketThread);
         }else{
             System.out.println("THREAD ALREADY STARTED FOR USER "+user_key+"!!!");

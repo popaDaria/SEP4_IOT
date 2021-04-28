@@ -3,28 +3,49 @@ package sep4.iot.gateway.webSocket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import sep4.iot.gateway.model.SensorEntry;
 
+import javax.net.ssl.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class WebSocketThread implements Runnable{
 
     private WebSocketClient webSocketClient;
+
     private int user_key;
     private static final HttpClient httpClient= HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();;
+    private ArrayList<SensorEntry> sensorEntries;
+
 
     public WebSocketThread(String url, int user_key) {
         webSocketClient = new WebSocketClient(url);
         this.user_key=user_key;
+        sensorEntries = new ArrayList<>();
+    }
+
+    public synchronized int getUser_key() {
+        return user_key;
+    }
+
+    public synchronized ArrayList<SensorEntry> getSensorEntries() {
+        return sensorEntries;
+    }
+
+    public synchronized void clearSensorEntries() {
+        sensorEntries.clear();
     }
 
     @Override
@@ -33,7 +54,7 @@ public class WebSocketThread implements Runnable{
         while (true){
             System.out.println("THREAD IS RUNNING FOR USER "+user_key);
             try {
-                Thread.sleep(8100);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
@@ -44,7 +65,7 @@ public class WebSocketThread implements Runnable{
 
                 //TODO: read info from queue and post it to the application server
 
-                System.out.println("SENSOR ENTRY DATA: "+upLinkMessage);
+                System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
                 /*
                 eg:{
                     "rssi": -116,
@@ -74,6 +95,9 @@ public class WebSocketThread implements Runnable{
                         tsLine=str;
                     }
                 }
+                System.out.println("data line: "+dataLine);
+                System.out.println("ts: "+tsLine);
+                /*
                 dataLine = dataLine.split("\"")[2];
                 char[] data = dataLine.toCharArray();
 
@@ -95,6 +119,13 @@ public class WebSocketThread implements Runnable{
 
                 System.out.println("RECEIVED SENSOR ENTRY: "+sensorEntry.toString());
 
+                sensorEntries.add(sensorEntry);
+
+                */
+
+               // TODO: check until here ^^^^^^^^^^^^^^^
+
+                /*
                 ObjectWriter objectWriter = new ObjectMapper().writer();
                 String json = null;
                 try {
@@ -105,24 +136,72 @@ public class WebSocketThread implements Runnable{
 
                 //TODO: set uri to app server one
 
-                HttpRequest request = HttpRequest.newBuilder()
-                        .POST(HttpRequest.BodyPublishers.ofString(json))
-                        .uri(URI.create("")).setHeader("User-Agent","Sensor entry")
-                        .header("Content-Type","application/json").build();
-
-                System.out.println("HTTP Req: "+request.toString());
-
+                OkHttpClient client = getUnsafeOkHttpClient();
+                MediaType mediaType = MediaType.parse("application/json");
+                RequestBody body = RequestBody.create(json,mediaType);
+                Request request = new Request.Builder()
+                        .url("http://localhost:5000/Senzor")
+                        .method("POST", body)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
                 try {
-                    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-                    System.out.println(response.statusCode());
-                } catch (Exception e) {
+                    Response response = client.newCall(request).execute();
+                    System.out.println(response.body());
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+
+                 */
+
             }else{
-                System.out.println(user_key+ " waiting for info...");
+                //System.out.println(user_key+ " waiting for info...");
             }
         }
 
     }
+
+    private static OkHttpClient getUnsafeOkHttpClient() {
+        try{
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[] {
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            OkHttpClient okHttpClient = builder.build();
+            return okHttpClient;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
+

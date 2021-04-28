@@ -6,6 +6,8 @@ import sep4.iot.gateway.model.HardwareUser;
 import sep4.iot.gateway.model.SensorEntry;
 import sep4.iot.gateway.service.SensorDataService;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/SensorData")
 public class SensorDataController {
@@ -15,9 +17,9 @@ public class SensorDataController {
 
     //CRUD-Retrieve
     @GetMapping
-    public SensorEntry getSensorEntry(@RequestBody final HardwareUser user){
+    public ArrayList<SensorEntry> getSensorEntry(@RequestBody final HardwareUser user){
         try {
-            SensorEntry entry = service.getSensorEntry(user);
+            ArrayList<SensorEntry> entry = service.getSensorEntry(user);
             return entry;
         }catch (Exception e){
             System.out.println(e.getMessage());

@@ -27,15 +27,15 @@ public class WebSocketClient implements WebSocket.Listener {
     }
 
     public String getUpLink(){
-        /*String ret=null ;
+        String ret=null ;
         if(list!=null){
             if(list.size()!=0){
                 ret = list.get(0);
                 list.remove(0);
             }
         }
-        return ret;*/
-        return dataQueue.poll();
+        return ret;
+        //return dataQueue.poll();
     }
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
@@ -46,6 +46,11 @@ public class WebSocketClient implements WebSocket.Listener {
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                 .buildAsync(URI.create(url), this);
         server = ws.join();
+    }
+
+    //abort connection
+    public void abortConnection(){
+        server.abort();
     }
 
     //onOpen()
@@ -59,7 +64,11 @@ public class WebSocketClient implements WebSocket.Listener {
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("A " + error.getCause() + " exception was thrown.");
         System.out.println("Message: " + error.getLocalizedMessage());
-        //webSocket.abort();
+       // webSocket.abort();
+        HttpClient client = HttpClient.newHttpClient();
+        CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
+                .buildAsync(URI.create("wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0="), this);
+        server = ws.join();
     };
     //onClose()
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
@@ -86,9 +95,10 @@ public class WebSocketClient implements WebSocket.Listener {
         String indented = null;
         try {
             indented = (new JSONObject(data.toString())).toString(5);
-            //System.out.println(indented);
-            //list.add(indented);
-            dataQueue.add(data.toString());
+            //System.out.println("FROM CLIENT: \n"+indented);
+            list.add(indented);
+            //dataQueue.add(data.toString());
+            System.out.println("QUEUE SIZE: "+list.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }
