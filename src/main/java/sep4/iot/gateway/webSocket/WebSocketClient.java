@@ -17,7 +17,7 @@ import java.util.concurrent.SynchronousQueue;
 public class WebSocketClient implements WebSocket.Listener {
 
     private WebSocket server = null;
-    private Queue<String> dataQueue;
+    //private Queue<String> dataQueue;
     private ArrayList<String> list;
 
     // Send down-link message to device
@@ -40,7 +40,7 @@ public class WebSocketClient implements WebSocket.Listener {
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
     public WebSocketClient(String url) {
-        dataQueue = new SynchronousQueue<>();
+        //dataQueue = new SynchronousQueue<>();
         list = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
@@ -65,10 +65,10 @@ public class WebSocketClient implements WebSocket.Listener {
         System.out.println("A " + error.getCause() + " exception was thrown.");
         System.out.println("Message: " + error.getLocalizedMessage());
        // webSocket.abort();
-        HttpClient client = HttpClient.newHttpClient();
+        /*HttpClient client = HttpClient.newHttpClient();
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
                 .buildAsync(URI.create("wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0="), this);
-        server = ws.join();
+        server = ws.join();*/
     };
     //onClose()
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
@@ -98,7 +98,7 @@ public class WebSocketClient implements WebSocket.Listener {
             //System.out.println("FROM CLIENT: \n"+indented);
             list.add(indented);
             //dataQueue.add(data.toString());
-            System.out.println("QUEUE SIZE: "+list.size());
+            System.out.println("LIST SIZE: "+list.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -87,16 +87,19 @@ public class WebSocketThread implements Runnable{
                 */
 
                 String[] lines = upLinkMessage.split(",");
-                String dataLine="", tsLine="";
+                String dataLine="", tsLine="", euiLine="";
                 for (String str:lines) {
                     if(str.contains("data")){
                         dataLine=str;
                     }else if(str.contains("ts")){
                         tsLine=str;
+                    }else if(str.contains("EUI")){
+                        euiLine=str;
                     }
                 }
                 System.out.println("data line: "+dataLine);
                 System.out.println("ts: "+tsLine);
+                System.out.println("EUI: "+euiLine);
                 /*
                 dataLine = dataLine.split("\"")[2];
                 char[] data = dataLine.toCharArray();
