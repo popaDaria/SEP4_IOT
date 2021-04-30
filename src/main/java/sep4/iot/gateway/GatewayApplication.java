@@ -36,8 +36,11 @@ public class GatewayApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(GatewayApplication.class, args);
+    }
 
-        SensorEntry sensorEntry = new SensorEntry(1,3,"jjgfjgf",
+
+
+       /* SensorEntry sensorEntry = new SensorEntry(1,3,"jjgfjgf",
                 4747575,12,25,13, 245);
         ObjectWriter objectWriter = new ObjectMapper().writer();
         String json = null;
@@ -59,10 +62,10 @@ public class GatewayApplication {
             Response response = client.newCall(request).execute();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
+        }*/
 
-    private static OkHttpClient getUnsafeOkHttpClient() {
+
+   /* private static OkHttpClient getUnsafeOkHttpClient() {
         try {
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[] {
@@ -102,6 +105,6 @@ public class GatewayApplication {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
 }

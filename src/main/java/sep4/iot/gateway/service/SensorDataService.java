@@ -49,6 +49,11 @@ public class SensorDataService implements ISensorDataService{
 
     @Override
     public void sendDataToSensor(SensorEntry sensorEntry) {
+        for (WebSocketThread hd: threads) {
+            if(hd.getUser_key()==sensorEntry.getUser_key()){
+                hd.sendSensorData(sensorEntry);
+            }
+        }
     }
 
     @Override

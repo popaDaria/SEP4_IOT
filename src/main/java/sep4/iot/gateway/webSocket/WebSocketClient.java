@@ -94,9 +94,9 @@ public class WebSocketClient implements WebSocket.Listener {
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;
         try {
-            indented = (new JSONObject(data.toString())).toString(5);
+            indented = (new JSONObject(data.toString())).toString(4);
             //System.out.println("FROM CLIENT: \n"+indented);
-            list.add(indented);
+            list.add(data.toString());
             //dataQueue.add(data.toString());
             System.out.println("LIST SIZE: "+list.size());
         } catch (JSONException e) {
