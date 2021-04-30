@@ -22,7 +22,9 @@ public class SensorEntry implements Serializable {
     public SensorEntry() {
     }
 
-    public SensorEntry(int entry_key, String hweui, int user_key, long entry_time, float air_temperature, float air_humidity, int air_co2, float light_level, float desired_air_temperature, float desired_air_humidity, int desired_air_co2, float desired_light_level) {
+    public SensorEntry(int entry_key, String hweui, int user_key, long entry_time, float air_temperature, float air_humidity,
+                       int air_co2, float light_level, float desired_air_temperature, float desired_air_humidity,
+                       int desired_air_co2, float desired_light_level) {
         this.entry_key = entry_key;
         this.user_key = user_key;
         this.hweui = hweui;
@@ -37,7 +39,8 @@ public class SensorEntry implements Serializable {
         this.desired_light_level = desired_light_level;
     }
 
-    public SensorEntry(int entry_key, int user_key, String hweui, long entry_time, float air_temperature, float air_humidity, int air_co2, float light_level) {
+    public SensorEntry(int entry_key, int user_key, String hweui, long entry_time, float air_temperature,
+                       float air_humidity, int air_co2, float light_level) {
         this.entry_key = entry_key;
         this.user_key = user_key;
         this.hweui = hweui;

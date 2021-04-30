@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import sep4.iot.gateway.model.DownlinkMessage;
 import sep4.iot.gateway.model.HardwareUser;
 import sep4.iot.gateway.model.SensorEntry;
 
@@ -26,10 +27,14 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Date;
+import org.apache.commons.codec.binary.Hex;
 
 @SpringBootApplication
 public class GatewayApplication {
@@ -38,7 +43,7 @@ public class GatewayApplication {
         SpringApplication.run(GatewayApplication.class, args);
     }
 
-
+//SensorEntry sensorEntry = new SensorEntry(1,"sdsfd",2,1343567654,23,23,23,23,24,26,123,320);
 
        /* SensorEntry sensorEntry = new SensorEntry(1,3,"jjgfjgf",
                 4747575,12,25,13, 245);

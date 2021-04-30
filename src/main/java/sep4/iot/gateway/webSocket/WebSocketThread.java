@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import okhttp3.*;
+import org.apache.commons.codec.binary.Hex;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
+import sep4.iot.gateway.model.DownlinkMessage;
 import sep4.iot.gateway.model.SensorEntry;
 
 import javax.net.ssl.*;
@@ -15,6 +17,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.ByteBuffer;
 import java.security.cert.CertificateException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -49,8 +52,39 @@ public class WebSocketThread implements Runnable{
     }
 
     public synchronized void sendSensorData(SensorEntry sensorEntry){
-        //TODO: transform sensor entry to jsonTelegram and post it
-        //webSocketClient.sendDownLink("");
+        ObjectWriter objectWriter = new ObjectMapper().writer();
+
+        String data = "";
+        short temp, hum,co2,light;
+        temp = (short)sensorEntry.getDesired_air_temperature();
+        hum = (short)sensorEntry.getDesired_air_humidity();
+        co2 = (short)sensorEntry.getDesired_air_co2();
+        light = (short) sensorEntry.getDesired_light_level();
+
+        ByteBuffer bb = ByteBuffer.allocate(2);
+        bb.clear();
+        byte[] bytes = bb.putShort(temp).array();
+        data+= Hex.encodeHexString(bytes);
+        bb.clear();
+        bytes = bb.putShort(hum).array();
+        data+= Hex.encodeHexString(bytes);
+        bb.clear();
+        bytes = bb.putShort(co2).array();
+        data+= Hex.encodeHexString(bytes);
+        bb.clear();
+        bytes=bb.putShort(light).array();
+        data+= Hex.encodeHexString(bytes);
+        bb.clear();
+
+        DownlinkMessage downlinkMessage = new DownlinkMessage(sensorEntry.getHweui(),data);
+        String json = null;
+        try {
+            json = new JSONObject(objectWriter.writeValueAsString(downlinkMessage)).toString(4);
+        } catch (JsonProcessingException | JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println("SENDING: "+json);
+        webSocketClient.sendDownLink(json);
     }
 
     @Override
