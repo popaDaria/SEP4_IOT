@@ -33,6 +33,7 @@ public class SensorDataController {
     public void sendDataToSensor(@RequestBody final SensorEntry sensorEntry){
         try {
             service.sendDataToSensor(sensorEntry);
+            //System.out.println("SAW POST:"+sensorEntry.toString());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

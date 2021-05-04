@@ -52,6 +52,7 @@ public class WebSocketThread implements Runnable{
     }
 
     public synchronized void sendSensorData(SensorEntry sensorEntry){
+        System.out.println("IN THREAD METHOD");
         ObjectWriter objectWriter = new ObjectMapper().writer();
 
         String data = "";
@@ -93,7 +94,7 @@ public class WebSocketThread implements Runnable{
         while (true){
             System.out.println("THREAD IS RUNNING FOR USER "+user_key);
             try {
-                Thread.sleep(100000);
+                Thread.sleep(31000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
@@ -162,6 +163,7 @@ public class WebSocketThread implements Runnable{
 
                 System.out.println("RECEIVED SENSOR ENTRY: "+sensorEntry.toString());
                 sensorEntries.add(sensorEntry);
+                System.out.println("LIST SIZE: "+sensorEntries.size());
             }
         }
 

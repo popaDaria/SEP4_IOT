@@ -98,7 +98,7 @@ public class WebSocketClient implements WebSocket.Listener {
             //System.out.println("FROM CLIENT: \n"+indented);
             list.add(data.toString());
             //dataQueue.add(data.toString());
-            System.out.println("LIST SIZE: "+list.size());
+            //System.out.println("LIST SIZE: "+list.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }
