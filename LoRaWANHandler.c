@@ -33,6 +33,7 @@
 }*/
 
 static lora_driver_payload_t _uplink_payload;
+static lora_driver_payload_t _downlink_payload;
 
 static void _lora_setup(void)
 {
@@ -87,6 +88,7 @@ static void _lora_setup(void)
 	{
 		// Connected to LoRaWAN :-)
 		puts("Connection succeeded \n");
+		//vTaskDelay(pdMS_TO_TICKS(5000UL)); //maybe some delay after
 	}
 	else
 	{
@@ -111,19 +113,24 @@ void lora_handler_task( void *pvParameters )
 	lora_driver_flushBuffers(); // get rid of first version string from module after reset!
 
 	_lora_setup();
+	vTaskDelay(150); //make sure the setup had time 
 
 	_uplink_payload.len = 8;
-	_uplink_payload.portNo = 2;
+	_uplink_payload.portNo = 1; 
+	
+	_downlink_payload.len = 8;
+	_downlink_payload.portNo = 1;
 
-	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = pdMS_TO_TICKS(120000UL); // Upload message every 2 minutes
-	xLastWakeTime = xTaskGetTickCount();
+	//TickType_t xLastWakeTime;
+	//const TickType_t xFrequency = pdMS_TO_TICKS(120000UL); // Upload message every 2 minutes
+	//xLastWakeTime = xTaskGetTickCount();
 	
 	for(;;)
 	{
-		xTaskDelayUntil( &xLastWakeTime, xFrequency );
-
+		//xTaskDelayUntil( &xLastWakeTime, xFrequency );
+		vTaskDelay(500); //aprox 1 min (10000 - aprox 3.5 min)
 		xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
+		puts("in semaphore\n");
 		
 		_uplink_payload.bytes[0] = entry_data.humidity >> 8;
 		_uplink_payload.bytes[1] = entry_data.humidity & 0xFF;
@@ -134,7 +141,37 @@ void lora_handler_task( void *pvParameters )
 		_uplink_payload.bytes[6] = entry_data.light >> 8;
 		_uplink_payload.bytes[7] = entry_data.light & 0xFF;
 
-		printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+		//printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+		
+		lora_driver_returnCode_t rc;
+		if ((rc = lora_driver_sendUploadMessage(false, &_uplink_payload)) == LORA_MAC_TX_OK )
+		{
+			puts("MESSAGE SENT \n");
+			// The uplink message is sent and there is no downlink message received
+		}
+		else if(rc==LORA_MAC_RX)
+		{
+			// The uplink message is sent and a downlink message is received
+			puts("MESSAGE SENT \n");
+			
+			xMessageBufferReceive(downlink_buffer, &_downlink_payload, sizeof(lora_driver_payload_t),portMAX_DELAY);
+			printf("DOWN LINK: from port: %d with %d bytes received!", _downlink_payload.portNo, _downlink_payload.len);
+			
+			
+			if(_downlink_payload.len==8) //number of bytes we send and expect to receive
+			{
+				desired_data.desired_temp=(_downlink_payload.bytes[0] << 8) + _downlink_payload.bytes[1];
+				desired_data.desired_hum=(_downlink_payload.bytes[2] << 8) + _downlink_payload.bytes[3];
+				desired_data.desired_co2=(_downlink_payload.bytes[4] << 8) + _downlink_payload.bytes[5];
+				desired_data.desired_light=(_downlink_payload.bytes[6] << 8) + _downlink_payload.bytes[7];
+			}
+			
+		}
+		else{
+			puts("Message not sent \n");
+		}
+		
+		puts("I SENT SMTH\n");
 		
 		xSemaphoreGive(hardware_semaphore);
 

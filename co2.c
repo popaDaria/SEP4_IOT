@@ -26,6 +26,6 @@ void co2Task(void *pvParameters){
 void co2Callback(uint16_t ppm){
 	xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
 	entry_data.co2=ppm;
-	printf("CO2 VALUE : %d ", entry_data.co2);
+	//printf("CO2 VALUE : %d ", entry_data.co2);
 	xSemaphoreGive(hardware_semaphore);
 }

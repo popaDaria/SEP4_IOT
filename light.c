@@ -12,6 +12,7 @@
 #include "light.h"
 #include "tsl2591.h"
 #include "semphr.h"
+#include "rc_servo.h"
 
 void lightTask(void* pvParameters) {
 	(void)pvParameters;
@@ -33,12 +34,24 @@ void lightCallback(tsl2591_returnCode_t rc) {
 	
 	if (TSL2591_OK == (rc = tsl2591_getLux(&lux)))
 	{
-		printf("Lux: %d\n", (uint16_t)lux);
+		//printf("Lux: %d\n", (uint16_t)lux);
 		entry_data.light = (uint16_t)lux;
 	}
 	else if (TSL2591_OVERFLOW == rc)
 	{
 		printf("Lux overflow\n");
 	}
+	
+	if(desired_data.desired_light>entry_data.light){
+		rc_servo_setPosition(1,100)	;
+		//printf("Motor is moving right\n");
+		printf("Light level is turned up\n");
+	}
+	if(desired_data.desired_light<entry_data.light){
+		rc_servo_setPosition(1,-100)	;
+		//printf("Motor is moving left\n");
+		printf("Light level is turned down\n");
+	}
+	
 	xSemaphoreGive(hardware_semaphore);
 }

@@ -2,7 +2,7 @@
  * light.h
  *
  * Created: 02.05.2021 08:24:03
- *  Author: popad
+ *  Author: natlimj
  */ 
 
 #include "tsl2591.h"

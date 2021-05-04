@@ -24,10 +24,12 @@
 #include "hih8120.h"
 #include "mh_z19.h"
 #include "tsl2591.h"
+#include "rc_servo.h"
 
 #include "co2.h"
 #include "light.h"
 #include "tempAndHum.h"
+#include "motor.h"
 
 
 // Prototype for LoRaWAN handler
@@ -54,6 +56,11 @@ void initialiseSystem()
 	entry_data.humidity=0;
 	entry_data.light=0;
 	entry_data.temperature=0;
+	
+	desired_data.desired_co2 =0;
+	desired_data.desired_hum =1000;
+	desired_data.desired_light=0;
+	desired_data.desired_temp=0;
 	
 	//temp&hum
 	int returnCode = hih8120_initialise();
@@ -83,6 +90,9 @@ void initialiseSystem()
 	if (returnCode != TSL2591_OK) {
 		printf("Failed to enable light sensor %d\n", returnCode);
 	}
+	
+	//initialise servo
+	rc_servo_initialise();
 
 }
 
@@ -93,9 +103,12 @@ int main(void)
 	
 	
 	xTaskCreate(lora_handler_task,  "Lora task",  configMINIMAL_STACK_SIZE+200, NULL, 3 , NULL );
-	xTaskCreate(tempAndHumidityTask, "temp&hum task", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-	xTaskCreate(co2Task, "co2 task", configMINIMAL_STACK_SIZE, NULL,2,NULL);
-	xTaskCreate(lightTask,"light task",configMINIMAL_STACK_SIZE,NULL,2,NULL);
+	xTaskCreate(tempAndHumidityTask, "temp&hum task", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate(co2Task, "co2 task", configMINIMAL_STACK_SIZE, NULL,1,NULL);
+	xTaskCreate(lightTask,"light task",configMINIMAL_STACK_SIZE,NULL,1,NULL);
+	//xTaskCreate(lightMotorTask,"light motor",configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+	//xTaskCreate(humidityMotorTask,"Humidity Motor task",configMINIMAL_STACK_SIZE,NULL,2,NULL);
+	//xTaskCreate(lightMotorTask,"Light Motor task",configMINIMAL_STACK_SIZE,NULL,2,NULL);
 	
 	hardware_semaphore = xSemaphoreCreateMutex();
 	if((hardware_semaphore)!=NULL){
@@ -108,6 +121,7 @@ int main(void)
 	/* Replace with your application code */
 	while (1)
 	{
+		;
 	}
 }
 

@@ -24,7 +24,7 @@ light.d light.o: .././light.c ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
  .././hardware.h ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
  ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
- .././light.h ../drivers/tsl2591.h
+ .././light.h ../drivers/tsl2591.h ../drivers/rc_servo.h
 
 ../FreeRTOS/src/ATMEGA_FreeRTOS.h:
 
@@ -93,3 +93,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 .././light.h:
 
 ../drivers/tsl2591.h:
+
+../drivers/rc_servo.h:

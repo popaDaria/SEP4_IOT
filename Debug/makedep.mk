@@ -26,6 +26,8 @@ FreeRTOS\src\timers.c
 
 FreeRTOS\src\variantHooks.c
 
+motor.c
+
 tempAndHum.c
 
 light.c

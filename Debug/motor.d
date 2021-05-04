@@ -1,5 +1,4 @@
-tempAndHum.d tempAndHum.o: .././tempAndHum.c \
- ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
+motor.d motor.o: .././motor.c ../FreeRTOS/src/ATMEGA_FreeRTOS.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
@@ -21,11 +20,11 @@ tempAndHum.d tempAndHum.o: .././tempAndHum.c \
  ../FreeRTOS/src/list.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
- .././tempAndHum.h ../drivers/hih8120.h \
+ ../drivers/stdio_driver.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h \
- ../drivers/stdio_driver.h ../FreeRTOS/src/semphr.h \
- ../FreeRTOS/src/queue.h .././hardware.h ../FreeRTOS/src/message_buffer.h \
- ../FreeRTOS/src/stream_buffer.h ../drivers/rc_servo.h
+ .././hardware.h ../FreeRTOS/src/semphr.h ../FreeRTOS/src/queue.h \
+ ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
+ .././motor.h ../drivers/rc_servo.h
 
 ../FreeRTOS/src/ATMEGA_FreeRTOS.h:
 
@@ -77,22 +76,20 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h:
 
-.././tempAndHum.h:
-
-../drivers/hih8120.h:
+../drivers/stdio_driver.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdbool.h:
 
-../drivers/stdio_driver.h:
+.././hardware.h:
 
 ../FreeRTOS/src/semphr.h:
 
 ../FreeRTOS/src/queue.h:
 
-.././hardware.h:
-
 ../FreeRTOS/src/message_buffer.h:
 
 ../FreeRTOS/src/stream_buffer.h:
+
+.././motor.h:
 
 ../drivers/rc_servo.h:

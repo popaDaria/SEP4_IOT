@@ -25,8 +25,9 @@ main.d main.o: .././main.c \
  ../drivers/serial.h ../drivers/lora_driver.h \
  ../FreeRTOS/src/message_buffer.h ../FreeRTOS/src/stream_buffer.h \
  ../drivers/status_leds.h .././loraHandler.h .././hardware.h \
- ../drivers/hih8120.h ../drivers/mh_z19.h ../drivers/tsl2591.h .././co2.h \
- .././light.h .././tempAndHum.h
+ ../drivers/hih8120.h ../drivers/mh_z19.h ../drivers/tsl2591.h \
+ ../drivers/rc_servo.h .././co2.h .././light.h .././tempAndHum.h \
+ .././motor.h
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdio.h:
 
@@ -108,8 +109,12 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 
 ../drivers/tsl2591.h:
 
+../drivers/rc_servo.h:
+
 .././co2.h:
 
 .././light.h:
 
 .././tempAndHum.h:
+
+.././motor.h:
