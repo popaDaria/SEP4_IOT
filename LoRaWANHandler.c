@@ -128,7 +128,7 @@ void lora_handler_task( void *pvParameters )
 	for(;;)
 	{
 		//xTaskDelayUntil( &xLastWakeTime, xFrequency );
-		vTaskDelay(500); //aprox 1 min (10000 - aprox 3.5 min)
+		vTaskDelay(10000); //500 = aprox 30 sec (10000 - aprox 3.5 min)
 		xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
 		puts("in semaphore\n");
 		
@@ -170,9 +170,7 @@ void lora_handler_task( void *pvParameters )
 		else{
 			puts("Message not sent \n");
 		}
-		
-		puts("I SENT SMTH\n");
-		
+				
 		xSemaphoreGive(hardware_semaphore);
 
 	}

@@ -16,16 +16,18 @@
 void co2Task(void *pvParameters){
 	(void)pvParameters;
 	while(1){
-		vTaskDelay(pdMS_TO_TICKS(5000UL));
+		//vTaskDelay(pdMS_TO_TICKS(5000UL));
+		vTaskDelay(100);
 		int statusCode = mh_z19_takeMeassuring();
 		if(statusCode!=MHZ19_OK){
 			printf("CO2 measuring error %d\n",statusCode);
 		}
+		vTaskDelay(9900);
 	}
 }
 void co2Callback(uint16_t ppm){
 	xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
 	entry_data.co2=ppm;
-	//printf("CO2 VALUE : %d ", entry_data.co2);
+	printf("CO2 VALUE : %d ", entry_data.co2);
 	xSemaphoreGive(hardware_semaphore);
 }
