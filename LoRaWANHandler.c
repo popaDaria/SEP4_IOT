@@ -113,7 +113,7 @@ void lora_handler_task( void *pvParameters )
 	lora_driver_flushBuffers(); // get rid of first version string from module after reset!
 
 	_lora_setup();
-	vTaskDelay(150); //make sure the setup had time 
+	//vTaskDelay(150); //make sure the setup had time 
 
 	_uplink_payload.len = 8;
 	_uplink_payload.portNo = 1; 
