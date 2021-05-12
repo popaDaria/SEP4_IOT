@@ -16,14 +16,13 @@ public class SensorDataService implements ISensorDataService{
     //private WebSocketThread webSocketThread;
     public static ExecutorService executorService ;
     private final UserThreadFile persistence;
-    private ArrayList<WebSocketThread> threads = new ArrayList<>();
+    private static ArrayList<WebSocketThread> threads = new ArrayList<>();
 
     public SensorDataService() {
         if(executorService==null)
             executorService=new ScheduledThreadPoolExecutor(10); //base size for now
         persistence = new UserThreadFile();
         initialiseThreads();
-        threads= new ArrayList<>();
     }
 
     private void initialiseThreads(){
@@ -31,7 +30,6 @@ public class SensorDataService implements ISensorDataService{
             String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
             WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
             threads.add(webSocketThread);
-            //System.out.println(threads.size()+" HOW MANY");
             executorService.submit(webSocketThread);
         }
     }
@@ -41,8 +39,9 @@ public class SensorDataService implements ISensorDataService{
         ArrayList<SensorEntry> info = new ArrayList<>();
         for (WebSocketThread hd: threads) {
             if(hd.getUser_key()==user.getUser_key()){
-                info = hd.getSensorEntries();
+                info.addAll(hd.getSensorEntries());
                 hd.clearSensorEntries();
+                return info;
             }
         }
         return info;
@@ -50,22 +49,12 @@ public class SensorDataService implements ISensorDataService{
 
     @Override
     public void sendDataToSensor(SensorEntry sensorEntry) {
-
-        for (HardwareUser user: persistence.getAllThreads()) {
-            String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
-            WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
-            threads.add(webSocketThread);
-        }
-
-        System.out.println(threads.size()+" how many now");
         for (WebSocketThread hd: threads) {
-            System.out.println(hd.getUser_key()+" thread");
             if(hd.getUser_key()==sensorEntry.getUser_key()){
                 hd.sendSensorData(sensorEntry);
-                System.out.println("IN SERVICE "+hd.getUser_key());
+                break;
             }
         }
-        System.out.println("In method for service");
     }
 
     @Override

@@ -52,7 +52,6 @@ public class WebSocketThread implements Runnable{
     }
 
     public synchronized void sendSensorData(SensorEntry sensorEntry){
-        System.out.println("IN THREAD METHOD");
         ObjectWriter objectWriter = new ObjectMapper().writer();
 
         String data = "";
@@ -102,7 +101,7 @@ public class WebSocketThread implements Runnable{
 
             String upLinkMessage = webSocketClient.getUpLink();
             if(upLinkMessage!=null){
-                System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
+                //System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
                 /*
                 eg:{
                     "rssi": -116,
