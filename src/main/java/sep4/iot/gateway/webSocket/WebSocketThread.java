@@ -93,7 +93,7 @@ public class WebSocketThread implements Runnable{
         while (true){
             System.out.println("THREAD IS RUNNING FOR USER "+user_key);
             try {
-                Thread.sleep(31000);
+                Thread.sleep(180000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
@@ -101,7 +101,7 @@ public class WebSocketThread implements Runnable{
 
             String upLinkMessage = webSocketClient.getUpLink();
             if(upLinkMessage!=null){
-                //System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
+                System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
                 /*
                 eg:{
                     "rssi": -116,
