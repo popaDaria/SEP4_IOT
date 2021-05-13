@@ -83,8 +83,11 @@ public class WebSocketThread implements Runnable{
         } catch (JsonProcessingException | JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("SENDING: "+json);
-        webSocketClient.sendDownLink(json);
+
+        String jsonTelegram = "{ \"cmd\" : \"tx\", \"EUI\" : \""+sensorEntry.getHweui()+"\", " +
+                "\"port\" : 2, \"confirmed\": false, \"data\" : \""+data+"\" }";
+        System.out.println("SENDING: "+jsonTelegram);
+        webSocketClient.sendDownLink(jsonTelegram);
     }
 
     @Override
