@@ -65,10 +65,6 @@ public class WebSocketClient implements WebSocket.Listener {
         System.out.println("A " + error.getCause() + " exception was thrown.");
         System.out.println("Message: " + error.getLocalizedMessage());
        // webSocket.abort();
-        /*HttpClient client = HttpClient.newHttpClient();
-        CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()
-                .buildAsync(URI.create("wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0="), this);
-        server = ws.join();*/
     };
     //onClose()
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
@@ -95,10 +91,8 @@ public class WebSocketClient implements WebSocket.Listener {
         String indented = null;
         try {
             indented = (new JSONObject(data.toString())).toString(4);
-            //System.out.println("FROM CLIENT: \n"+indented);
             list.add(data.toString());
             //dataQueue.add(data.toString());
-            //System.out.println("LIST SIZE: "+list.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }

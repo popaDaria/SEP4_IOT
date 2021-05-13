@@ -96,7 +96,7 @@ public class WebSocketThread implements Runnable{
         while (true){
             System.out.println("THREAD IS RUNNING FOR USER "+user_key);
             try {
-                Thread.sleep(180000);
+                Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 break;
@@ -144,7 +144,7 @@ public class WebSocketThread implements Runnable{
                 System.out.println("ts: "+tsLine);
                 System.out.println("EUI: "+euiLine);
 
-                if(error==null&&success==null){
+                if(!tsLine.equals("") && !dataLine.equals("")){
                     SensorEntry sensorEntry = new SensorEntry();
                     sensorEntry.setUser_key(user_key);
 
