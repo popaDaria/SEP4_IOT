@@ -79,7 +79,7 @@ public class WebSocketThread implements Runnable{
         DownlinkMessage downlinkMessage = new DownlinkMessage(sensorEntry.getHweui(),data);
         String json = null;
         try {
-            json = new JSONObject(objectWriter.writeValueAsString(downlinkMessage)).toString(4);
+            json = new JSONObject(objectWriter.writeValueAsString(downlinkMessage)).toString();
         } catch (JsonProcessingException | JSONException e) {
             e.printStackTrace();
         }
@@ -123,7 +123,7 @@ public class WebSocketThread implements Runnable{
                 */
 
                 String[] lines = upLinkMessage.split(",");
-                String dataLine="", tsLine="", euiLine="";
+                String dataLine="", tsLine="", euiLine="", error=null;
                 for (String str:lines) {
                     if(str.contains("data")){
                         dataLine=str;
@@ -131,38 +131,44 @@ public class WebSocketThread implements Runnable{
                         tsLine=str;
                     }else if(str.contains("EUI")){
                         euiLine=str;
+                    }else if(str.contains("error")){
+                        error=str;
                     }
                 }
                 System.out.println("data line: "+dataLine);
                 System.out.println("ts: "+tsLine);
                 System.out.println("EUI: "+euiLine);
 
-                SensorEntry sensorEntry = new SensorEntry();
-                sensorEntry.setUser_key(user_key);
+                if(error==null){
+                    SensorEntry sensorEntry = new SensorEntry();
+                    sensorEntry.setUser_key(user_key);
 
-                dataLine = dataLine.split("\"")[3];
-                char[] data = dataLine.toCharArray();
+                    dataLine = dataLine.split("\"")[3];
+                    char[] data = dataLine.toCharArray();
 
-                euiLine = euiLine.split("\"")[3];
-                sensorEntry.setHweui(euiLine);
+                    euiLine = euiLine.split("\"")[3];
+                    sensorEntry.setHweui(euiLine);
 
-                tsLine = tsLine.split(":")[1].trim();
-                tsLine = tsLine.split(" ")[0].trim();
+                    tsLine = tsLine.split(":")[1].trim();
+                    tsLine = tsLine.split(" ")[0].trim();
 
-                sensorEntry.setEntry_time(Long.parseLong(tsLine));
+                    sensorEntry.setEntry_time(Long.parseLong(tsLine));
 
-                int hum=Integer.parseInt(data[0]+data[1]+"");
-                int temp=Integer.parseInt(data[2]+data[3]+"");
-                sensorEntry.setAir_co2(Integer.parseInt(data[4]+data[5]+""));
-                int light=Integer.parseInt(data[6]+data[7]+"");
+                    int hum = Integer.parseInt(data[0] + data[1] + "");
+                    int temp = Integer.parseInt(data[2] + data[3] + "");
+                    sensorEntry.setAir_co2(Integer.parseInt(data[4] + data[5] + ""));
+                    int light = Integer.parseInt(data[6] + data[7] + "");
 
-                sensorEntry.setAir_humidity((float)hum/10);
-                sensorEntry.setAir_temperature((float)temp/10);
-                sensorEntry.setLight_level(light);
+                    sensorEntry.setAir_humidity((float) hum / 10);
+                    sensorEntry.setAir_temperature((float) temp / 10);
+                    sensorEntry.setLight_level(light);
 
-                System.out.println("RECEIVED SENSOR ENTRY: "+sensorEntry.toString());
-                sensorEntries.add(sensorEntry);
-                System.out.println("LIST SIZE: "+sensorEntries.size());
+                    System.out.println("RECEIVED SENSOR ENTRY: " + sensorEntry.toString());
+                    sensorEntries.add(sensorEntry);
+                    System.out.println("LIST SIZE: " + sensorEntries.size());
+                }else{
+                    System.out.println(error);
+                }
             }
         }
 

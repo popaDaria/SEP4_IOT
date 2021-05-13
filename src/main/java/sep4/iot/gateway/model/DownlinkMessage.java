@@ -17,11 +17,11 @@ public class DownlinkMessage {
     }
 
     public DownlinkMessage(String EUI, String data) {
-        this.EUI = EUI;
-        this.data = data;
         cmd="tx";
-        port=1;
+        this.EUI = EUI;
+        port=2;
         confirmed=false;
+        this.data = data;
     }
 
     @Override
