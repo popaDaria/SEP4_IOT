@@ -126,7 +126,7 @@ public class WebSocketThread implements Runnable{
                 */
 
                 String[] lines = upLinkMessage.split(",");
-                String dataLine="", tsLine="", euiLine="", error=null;
+                String dataLine="", tsLine="", euiLine="", error=null, success=null;
                 for (String str:lines) {
                     if(str.contains("data")){
                         dataLine=str;
@@ -136,13 +136,15 @@ public class WebSocketThread implements Runnable{
                         euiLine=str;
                     }else if(str.contains("error")){
                         error=str;
+                    }else if(str.contains("success")){
+                        success=str;
                     }
                 }
                 System.out.println("data line: "+dataLine);
                 System.out.println("ts: "+tsLine);
                 System.out.println("EUI: "+euiLine);
 
-                if(error==null){
+                if(error==null&&success==null){
                     SensorEntry sensorEntry = new SensorEntry();
                     sensorEntry.setUser_key(user_key);
 
@@ -170,7 +172,10 @@ public class WebSocketThread implements Runnable{
                     sensorEntries.add(sensorEntry);
                     System.out.println("LIST SIZE: " + sensorEntries.size());
                 }else{
-                    System.out.println(error);
+                    if(error!=null)
+                        System.out.println(error);
+                    else
+                        System.out.println(success);
                 }
             }
         }
