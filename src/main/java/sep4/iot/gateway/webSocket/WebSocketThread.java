@@ -1,35 +1,18 @@
 package sep4.iot.gateway.webSocket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import okhttp3.*;
 import org.apache.commons.codec.binary.Hex;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Document;
-import sep4.iot.gateway.model.DownlinkMessage;
 import sep4.iot.gateway.model.SensorEntry;
 
-import javax.net.ssl.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.ByteBuffer;
-import java.security.cert.CertificateException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class WebSocketThread implements Runnable{
 
     private WebSocketClient webSocketClient;
 
     private int user_key;
-    //private static final HttpClient httpClient= HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();;
     private ArrayList<SensorEntry> sensorEntries;
 
 
@@ -75,14 +58,6 @@ public class WebSocketThread implements Runnable{
         bytes=bb.putShort(light).array();
         data+= Hex.encodeHexString(bytes);
         bb.clear();
-
-        DownlinkMessage downlinkMessage = new DownlinkMessage(sensorEntry.getHweui(),data);
-        String json = null;
-        try {
-            json = new JSONObject(objectWriter.writeValueAsString(downlinkMessage)).toString();
-        } catch (JsonProcessingException | JSONException e) {
-            e.printStackTrace();
-        }
 
         String jsonTelegram = "{ \"cmd\" : \"tx\", \"EUI\" : \""+sensorEntry.getHweui()+"\", " +
                 "\"port\" : 2, \"confirmed\": false, \"data\" : \""+data+"\" }";

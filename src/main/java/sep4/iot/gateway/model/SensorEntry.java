@@ -51,10 +51,10 @@ public class SensorEntry implements Serializable {
         this.light_level = light_level;
 
         //dummy values for desired fields to indicate received data
-        desired_air_co2=-1;
-        desired_air_humidity=-1;
-        desired_light_level=-1;
-        desired_air_temperature=-1;
+        desired_air_co2=0;
+        desired_air_humidity=0;
+        desired_light_level=0;
+        desired_air_temperature=0;
     }
 
     public String getHweui() {
