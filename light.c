@@ -19,12 +19,13 @@ void lightTask(void* pvParameters) {
 
 	while (1) {
 		//vTaskDelay(pdMS_TO_TICKS(7000UL));
-		vTaskDelay(200);
+		//printf("light delay %lu \n", pdMS_TO_TICKS(7000UL));
+		vTaskDelay(70);
 		int statusCode = tsl2591_fetchData();
 		if (statusCode != TSL2591_OK) {
 			printf("Light data error: %d\n", statusCode);
 		}
-		vTaskDelay(9800);
+		vTaskDelay(9900);
 	}
 
 }

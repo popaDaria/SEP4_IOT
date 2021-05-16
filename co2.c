@@ -17,7 +17,8 @@ void co2Task(void *pvParameters){
 	(void)pvParameters;
 	while(1){
 		//vTaskDelay(pdMS_TO_TICKS(5000UL));
-		vTaskDelay(100);
+		//printf("co2 delay %lu \n", pdMS_TO_TICKS(5000UL));
+		vTaskDelay(50);
 		int statusCode = mh_z19_takeMeassuring();
 		if(statusCode!=MHZ19_OK){
 			printf("CO2 measuring error %d\n",statusCode);
