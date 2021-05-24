@@ -118,28 +118,25 @@ public class WebSocketThread implements Runnable{
                     SensorEntry sensorEntry = new SensorEntry();
                     sensorEntry.setUser_key(user_key);
 
-                    dataLine = dataLine.split("\"")[3];
-                    char[] data = dataLine.toCharArray();
-
                     euiLine = euiLine.split("\"")[3];
                     sensorEntry.setHweui(euiLine);
 
                     tsLine = tsLine.split(":")[1].trim();
                     tsLine = tsLine.split(" ")[0].trim();
-
                     sensorEntry.setEntry_time(Long.parseLong(tsLine));
 
-                    byte[] data2= new byte[8];
+                    dataLine = dataLine.split("\"")[3];
+                    byte[] data= new byte[8];
                     try {
-                        data2 = Hex.decodeHex(data);
+                        data = Hex.decodeHex(dataLine.toCharArray());
                     } catch (DecoderException e) {
                         e.printStackTrace();
                     }
 
-                    int hum = ((data2[0] & 0xff) << 8) | (data2[1] & 0xff);
-                    int temp = ((data2[2] & 0xff) << 8) | (data2[3] & 0xff);
-                    int co2 = ((data2[4] & 0xff) << 8) | (data2[5] & 0xff);
-                    int light = ((data2[6] & 0xff) << 8) | (data2[7] & 0xff);
+                    int hum = ((data[0] & 0xff) << 8) | (data[1] & 0xff);
+                    int temp = ((data[2] & 0xff) << 8) | (data[3] & 0xff);
+                    int co2 = ((data[4] & 0xff) << 8) | (data[5] & 0xff);
+                    int light = ((data[6] & 0xff) << 8) | (data[7] & 0xff);
 
                     sensorEntry.setAir_humidity((float) hum/10);
                     sensorEntry.setAir_temperature((float) temp / 10);
