@@ -1,12 +1,11 @@
 package sep4.iot.gateway.persistance;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 import sep4.iot.gateway.model.HardwareUser;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 

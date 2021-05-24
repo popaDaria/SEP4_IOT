@@ -7,17 +7,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.SynchronousQueue;
 
 public class WebSocketClient implements WebSocket.Listener {
 
     private WebSocket server = null;
-    //private Queue<String> dataQueue;
     private ArrayList<String> list;
 
     // Send down-link message to device
@@ -35,12 +31,10 @@ public class WebSocketClient implements WebSocket.Listener {
             }
         }
         return ret;
-        //return dataQueue.poll();
     }
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
     public WebSocketClient(String url) {
-        //dataQueue = new SynchronousQueue<>();
         list = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         CompletableFuture<WebSocket> ws = client.newWebSocketBuilder()

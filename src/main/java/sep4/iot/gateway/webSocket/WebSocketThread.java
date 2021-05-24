@@ -1,7 +1,6 @@
 package sep4.iot.gateway.webSocket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import sep4.iot.gateway.model.SensorEntry;
 
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 public class WebSocketThread implements Runnable{
 
     private WebSocketClient webSocketClient;
-
     private int user_key;
     private ArrayList<SensorEntry> sensorEntries;
 
@@ -35,7 +33,6 @@ public class WebSocketThread implements Runnable{
     }
 
     public synchronized void sendSensorData(SensorEntry sensorEntry){
-        ObjectWriter objectWriter = new ObjectMapper().writer();
 
         String data = "";
         short temp, hum,co2,light;
@@ -79,7 +76,7 @@ public class WebSocketThread implements Runnable{
 
             String upLinkMessage = webSocketClient.getUpLink();
             if(upLinkMessage!=null){
-                System.out.println("SENSOR ENTRY DATA FROM THREAD: "+upLinkMessage);
+                System.out.println("SENSOR ENTRY MESSAGE FROM THREAD: "+upLinkMessage);
                 /*
                 eg:{
                     "rssi": -116,
@@ -132,14 +129,22 @@ public class WebSocketThread implements Runnable{
 
                     sensorEntry.setEntry_time(Long.parseLong(tsLine));
 
-                    int hum = Integer.parseInt(data[0] + data[1] + "");
-                    int temp = Integer.parseInt(data[2] + data[3] + "");
-                    sensorEntry.setAir_co2(Integer.parseInt(data[4] + data[5] + ""));
-                    int light = Integer.parseInt(data[6] + data[7] + "");
+                    byte[] data2= new byte[8];
+                    try {
+                        data2 = Hex.decodeHex(data);
+                    } catch (DecoderException e) {
+                        e.printStackTrace();
+                    }
 
-                    sensorEntry.setAir_humidity((float) hum / 10);
+                    int hum = ((data2[0] & 0xff) << 8) | (data2[1] & 0xff);
+                    int temp = ((data2[2] & 0xff) << 8) | (data2[3] & 0xff);
+                    int co2 = ((data2[4] & 0xff) << 8) | (data2[5] & 0xff);
+                    int light = ((data2[6] & 0xff) << 8) | (data2[7] & 0xff);
+
+                    sensorEntry.setAir_humidity((float) hum/10);
                     sensorEntry.setAir_temperature((float) temp / 10);
-                    sensorEntry.setLight_level(light);
+                    sensorEntry.setAir_co2(co2);
+                    sensorEntry.setLight_level(light*10);
 
                     System.out.println("RECEIVED SENSOR ENTRY: " + sensorEntry.toString());
                     sensorEntries.add(sensorEntry);
