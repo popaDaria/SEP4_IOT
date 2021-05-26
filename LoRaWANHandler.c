@@ -20,18 +20,6 @@
 #define LORA_appEUI "080AE22D17745AEA"
 #define LORA_appKEY "12A67C3072B659179BC2216FE32B7DC9"
 
-//void lora_handler_task( void *pvParameters );
-/*void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
-{
-	xTaskCreate(
-	lora_handler_task
-	,  "LRHand"  
-	,  configMINIMAL_STACK_SIZE+200  
-	,  NULL
-	,  lora_handler_task_priority  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-	,  NULL );
-}*/
-
 static lora_driver_payload_t _uplink_payload;
 static lora_driver_payload_t _downlink_payload;
 
@@ -39,8 +27,9 @@ static void _lora_setup(void)
 {
 	char _out_buf[20];
 	lora_driver_returnCode_t rc;
-	status_leds_slowBlink(led_ST2); // OPTIONAL: Led the green led blink slowly while we are setting up LoRa
+	status_leds_slowBlink(led_ST2); 
 
+/*
 	// Factory reset the transceiver
 	printf("FactoryReset >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_rn2483FactoryReset()));
 	
@@ -66,12 +55,14 @@ static void _lora_setup(void)
 	// Set receiver window1 delay to 500 ms - this is needed if down-link messages will be used
 	printf("Set Receiver Delay: %d ms >%s<\n", 500, lora_driver_mapReturnCodeToText(lora_driver_setReceiveDelay(500)));
 
+*/
+
 	// Join the LoRaWAN
 	uint8_t maxJoinTriesLeft = 10;
 	
 	do {
 		rc = lora_driver_join(LORA_OTAA);
-		printf("Join Network TriesLeft:%d >%s<\n", maxJoinTriesLeft, lora_driver_mapReturnCodeToText(rc));
+		//printf("Join Network TriesLeft:%d >%s<\n", maxJoinTriesLeft, lora_driver_mapReturnCodeToText(rc));
 
 		if ( rc != LORA_ACCEPTED)
 		{
@@ -87,12 +78,12 @@ static void _lora_setup(void)
 	if (rc == LORA_ACCEPTED)
 	{
 		// Connected to LoRaWAN :-)
-		puts("Connection succeeded \n");
+		//puts("Connection succeeded \n");
 		//vTaskDelay(pdMS_TO_TICKS(5000UL)); //maybe some delay after
 	}
 	else
 	{
-		puts("Connection failed \n");
+		//puts("Connection failed \n");
 		while (1)
 		{
 			taskYIELD();
@@ -120,17 +111,12 @@ void lora_handler_task( void *pvParameters )
 	
 	_downlink_payload.len = 8;
 	_downlink_payload.portNo = 1;
-
-	//TickType_t xLastWakeTime;
-	//const TickType_t xFrequency = pdMS_TO_TICKS(120000UL); // Upload message every 2 minutes
-	//xLastWakeTime = xTaskGetTickCount();
 	
 	for(;;)
 	{
-		//xTaskDelayUntil( &xLastWakeTime, xFrequency );
 		vTaskDelay(10000); //500 = aprox 30 sec (10000 - aprox 3.5 min)
 		xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
-		puts("in semaphore\n");
+		//puts("in semaphore\n");
 		
 		_uplink_payload.bytes[0] = entry_data.humidity >> 8;
 		_uplink_payload.bytes[1] = entry_data.humidity & 0xFF;
@@ -144,18 +130,21 @@ void lora_handler_task( void *pvParameters )
 		//printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
 		
 		lora_driver_returnCode_t rc;
-		if ((rc = lora_driver_sendUploadMessage(false, &_uplink_payload)) == LORA_MAC_TX_OK )
+		
+		rc = lora_driver_sendUploadMessage(false, &_uplink_payload);
+		
+		if (rc  == LORA_MAC_TX_OK )
 		{
-			puts("MESSAGE SENT \n");
+			//puts("MESSAGE SENT \n");
 			// The uplink message is sent and there is no downlink message received
 		}
 		else if(rc==LORA_MAC_RX)
 		{
 			// The uplink message is sent and a downlink message is received
-			puts("MESSAGE SENT \n");
+			//puts("MESSAGE SENT \n");
 			
 			xMessageBufferReceive(downlink_buffer, &_downlink_payload, sizeof(lora_driver_payload_t),portMAX_DELAY);
-			printf("DOWN LINK: from port: %d with %d bytes received!", _downlink_payload.portNo, _downlink_payload.len);
+			//printf("DOWN LINK: from port: %d with %d bytes received! \n", _downlink_payload.portNo, _downlink_payload.len);
 			
 			
 			if(_downlink_payload.len==8) //number of bytes we send and expect to receive
@@ -164,26 +153,16 @@ void lora_handler_task( void *pvParameters )
 				desired_data.desired_hum=(_downlink_payload.bytes[2] << 8) + _downlink_payload.bytes[3];
 				desired_data.desired_co2=(_downlink_payload.bytes[4] << 8) + _downlink_payload.bytes[5];
 				desired_data.desired_light=(_downlink_payload.bytes[6] << 8) + _downlink_payload.bytes[7];
+				//printf("values received: %d, %d, %d, %d \n \n",desired_data.desired_temp,desired_data.desired_hum,desired_data.desired_co2,desired_data.desired_light);
 			}
 			
 		}
-		else{
+		/*else{
 			puts("Message not sent \n");
-		}
+		}*/
 				
 		xSemaphoreGive(hardware_semaphore);
 
 	}
 }
 
-/*
-		uint16_t hum = 12345; // Dummy humidity
-		int16_t temp = 675; // Dummy temp
-		uint16_t co2_ppm = 1050; // Dummy CO2
-
-		_uplink_payload.bytes[0] = hum >> 8;
-		_uplink_payload.bytes[1] = hum & 0xFF;
-		_uplink_payload.bytes[2] = temp >> 8;
-		_uplink_payload.bytes[3] = temp & 0xFF;
-		_uplink_payload.bytes[4] = co2_ppm >> 8;
-		_uplink_payload.bytes[5] = co2_ppm & 0xFF;*/

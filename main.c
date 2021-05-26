@@ -57,39 +57,35 @@ void initialiseSystem()
 	entry_data.light=0;
 	entry_data.temperature=0;
 	
-	desired_data.desired_co2 =0;
-	desired_data.desired_hum =1000;
-	desired_data.desired_light=0;
-	desired_data.desired_temp=0;
-	
 	//temp&hum
 	int returnCode = hih8120_initialise();
-	if(HIH8120_OK!=returnCode){
+	/*if(HIH8120_OK!=returnCode){
 		printf("HIH8120 initialize error %d \n",returnCode);
-		}else{
+		}
+		else {
 		puts("Humidity and Temperature driver initialized");
-	}
+	}*/
 	
 	//co2
 	mh_z19_initialise(ser_USART3);
 	mh_z19_injectCallBack(co2Callback);
-	puts("Co2 driver started \n");
+	//puts("Co2 driver started \n");
 	
 	//light 
 	returnCode = tsl2591_initialise(lightCallback);
 
-	if (returnCode != TSL2591_OK) {
+	/*if (returnCode != TSL2591_OK) {
 		printf("TSL2591 initialize error %d \n", returnCode);
 	}
 	else {
 		puts("Light driver initialized");
-	}
+	}*/
 
 	//enable light sensor
 	returnCode = tsl2591_enable();
-	if (returnCode != TSL2591_OK) {
+	/*if (returnCode != TSL2591_OK) {
 		printf("Failed to enable light sensor %d\n", returnCode);
-	}
+	}*/
 	
 	//initialise servo
 	rc_servo_initialise();
@@ -106,9 +102,7 @@ int main(void)
 	xTaskCreate(tempAndHumidityTask, "temp&hum task", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	xTaskCreate(co2Task, "co2 task", configMINIMAL_STACK_SIZE, NULL,1,NULL);
 	xTaskCreate(lightTask,"light task",configMINIMAL_STACK_SIZE,NULL,1,NULL);
-	//xTaskCreate(lightMotorTask,"light motor",configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-	//xTaskCreate(humidityMotorTask,"Humidity Motor task",configMINIMAL_STACK_SIZE,NULL,2,NULL);
-	//xTaskCreate(lightMotorTask,"Light Motor task",configMINIMAL_STACK_SIZE,NULL,2,NULL);
+	xTaskCreate(humMotorTask, "Humidity motor Task", configMINIMAL_STACK_SIZE + 200, NULL, 2, NULL);
 	
 	hardware_semaphore = xSemaphoreCreateMutex();
 	if((hardware_semaphore)!=NULL){
@@ -116,9 +110,8 @@ int main(void)
 	}
 	
 	printf("Program Started!!\n");
-	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
-
-	/* Replace with your application code */
+	vTaskStartScheduler(); 
+	
 	while (1)
 	{
 		;

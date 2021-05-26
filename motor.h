@@ -9,6 +9,6 @@
 #ifndef MOTOR_H_
 #define MOTOR_H_
 
-void lightMotorTask(void* pvParameters);
+void humMotorTask(void* pvParameters);
 
 #endif /* MOTOR_H_ */

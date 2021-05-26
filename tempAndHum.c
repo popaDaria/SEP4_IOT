@@ -18,41 +18,31 @@ void tempAndHumidityTask(void* pvParameters){
 	(void) pvParameters;
 	
 	while(1){
-		//vTaskDelay(pdMS_TO_TICKS(2000UL)); //every 2 sec
 		vTaskDelay(50);
 		
 		int returnCode = hih8120_wakeup();
-		if(HIH8120_OK != returnCode && returnCode!= HIH8120_TWI_BUSY){
+		/*if(HIH8120_OK != returnCode && returnCode!= HIH8120_TWI_BUSY){
 			printf("HIH8120 wakeup error %d \n",returnCode);
-		}
+		}*/
 		
-		//vTaskDelay(pdMS_TO_TICKS(100UL));
-		vTaskDelay(10); // maybe 50 works too
+		vTaskDelay(10);
 		
 		returnCode = hih8120_measure();
-		if(HIH8120_OK!=returnCode && returnCode!= HIH8120_TWI_BUSY){
+		/*if(HIH8120_OK!=returnCode && returnCode!= HIH8120_TWI_BUSY){
 			printf("HIH8120 measure error %d \n",returnCode);
-		}
+		}*/
 		
-		vTaskDelay(15); //might need to prolongue this
+		vTaskDelay(15);
 		
 		xSemaphoreTake(hardware_semaphore, portMAX_DELAY);
 		
 		entry_data.humidity=hih8120_getHumidityPercent_x10();
 		entry_data.temperature=hih8120_getTemperature_x10();
-		printf("Humidity= %d and Temperature= %d \n",entry_data.humidity,entry_data.temperature);
+		//printf("Humidity= %d and Temperature= %d \n",entry_data.humidity,entry_data.temperature);
 		
-		/* if(desired_data.desired_hum>entry_data.humidity){
-			printf("Water motor is moving right\n");
-			rc_servo_setPosition(0,100)	;
-			vTaskDelay(40);
-			printf("Water motor is moving left\n");
-			rc_servo_setPosition(0,-100);
-			//desired_data.desired_hum=0;
-		} */
 		xSemaphoreGive(hardware_semaphore);
 		
-		vTaskDelay(9900); // can try 9760 to be more precise
+		vTaskDelay(9900); 
 	}
 	
 }
