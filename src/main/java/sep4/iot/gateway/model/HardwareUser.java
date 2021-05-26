@@ -12,16 +12,22 @@ import java.io.Serializable;
  * @since 26-05-2021
  */
 public class HardwareUser implements Serializable {
+    /**
+     * @param user_key - unique user identifier
+     */
     private int user_key;
+    /**
+     * @param user_token - unique Loriot app token
+     */
     private String user_token;
 
     /**
-     * Default controller
+     * Default constructor
      */
     public HardwareUser(){}
 
     /**
-     * Main controller for HardwareUser
+     * Main constructor for HardwareUser
      * @param user_key - unique identification number for a user
      * @param user_token - unique application token for an user used to connect to the Loriot gateway
      */

@@ -22,7 +22,7 @@ public class WebSocketThread implements Runnable{
     private boolean stop;
 
     /**
-     * Controller used to start the web socket connection for the user
+     * Constructor used to start the web socket connection for the user
      * @param url - the user's URL created with the unique app token
      * @param user_key - the user's unique key used to differentiate threads
      */

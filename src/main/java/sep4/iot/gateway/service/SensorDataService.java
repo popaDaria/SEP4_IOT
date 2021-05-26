@@ -25,7 +25,7 @@ public class SensorDataService implements ISensorDataService{
     private static ArrayList<WebSocketThread> threads = new ArrayList<>();
 
     /**
-     * Controller used to initialise the persistence and listening threads
+     * Constructor used to initialise the persistence and listening threads
      */
     public SensorDataService() {
         if(executorService==null)

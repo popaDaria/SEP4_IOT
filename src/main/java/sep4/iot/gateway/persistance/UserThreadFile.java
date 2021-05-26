@@ -26,7 +26,7 @@ public class UserThreadFile {
     private ObjectMapper mapper;
 
     /**
-     * Controller used to initialise the hardware user threads list
+     * Constructor used to initialise the hardware user threads list
      */
     public UserThreadFile(){
         filename = new ApplicationHome(this.getClass()).getDir() + "/users.json";

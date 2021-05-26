@@ -51,7 +51,7 @@ public class WebSocketClient implements WebSocket.Listener {
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=???="
     /**
-     * Controller used for setting up and joining the web socket connection to Loriot
+     * Constructor used for setting up and joining the web socket connection to Loriot
      * @param url - the URL for the socket connection
      */
     public WebSocketClient(String url) {

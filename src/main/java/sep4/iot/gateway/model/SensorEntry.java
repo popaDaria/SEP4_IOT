@@ -29,7 +29,7 @@ public class SensorEntry implements Serializable {
     private float desired_light_level;
 
     /**
-     * Default controller
+     * Default constructor
      */
     public SensorEntry(){}
 
@@ -68,7 +68,7 @@ public class SensorEntry implements Serializable {
     }
 
     /**
-     * Controller used to save new sensor entries from the hardware and prepare them to be
+     * Constructor used to save new sensor entries from the hardware and prepare them to be
      * sent to the client
      *
      * @param entry_key - unique entry key of the sensor entry
