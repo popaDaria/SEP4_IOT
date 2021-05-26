@@ -29,7 +29,7 @@ static void _lora_setup(void)
 	lora_driver_returnCode_t rc;
 	status_leds_slowBlink(led_ST2); 
 
-/*
+
 	// Factory reset the transceiver
 	printf("FactoryReset >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_rn2483FactoryReset()));
 	
@@ -55,7 +55,7 @@ static void _lora_setup(void)
 	// Set receiver window1 delay to 500 ms - this is needed if down-link messages will be used
 	printf("Set Receiver Delay: %d ms >%s<\n", 500, lora_driver_mapReturnCodeToText(lora_driver_setReceiveDelay(500)));
 
-*/
+
 
 	// Join the LoRaWAN
 	uint8_t maxJoinTriesLeft = 10;
@@ -79,7 +79,6 @@ static void _lora_setup(void)
 	{
 		// Connected to LoRaWAN :-)
 		//puts("Connection succeeded \n");
-		//vTaskDelay(pdMS_TO_TICKS(5000UL)); //maybe some delay after
 	}
 	else
 	{
@@ -104,7 +103,6 @@ void lora_handler_task( void *pvParameters )
 	lora_driver_flushBuffers(); // get rid of first version string from module after reset!
 
 	_lora_setup();
-	//vTaskDelay(150); //make sure the setup had time 
 
 	_uplink_payload.len = 8;
 	_uplink_payload.portNo = 1; 
@@ -116,7 +114,6 @@ void lora_handler_task( void *pvParameters )
 	{
 		vTaskDelay(10000); //500 = aprox 30 sec (10000 - aprox 3.5 min)
 		xSemaphoreTake(hardware_semaphore,portMAX_DELAY);
-		//puts("in semaphore\n");
 		
 		_uplink_payload.bytes[0] = entry_data.humidity >> 8;
 		_uplink_payload.bytes[1] = entry_data.humidity & 0xFF;
@@ -126,8 +123,6 @@ void lora_handler_task( void *pvParameters )
 		_uplink_payload.bytes[5] = entry_data.co2 & 0xFF;
 		_uplink_payload.bytes[6] = entry_data.light >> 8;
 		_uplink_payload.bytes[7] = entry_data.light & 0xFF;
-
-		//printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
 		
 		lora_driver_returnCode_t rc;
 		
@@ -154,12 +149,8 @@ void lora_handler_task( void *pvParameters )
 				desired_data.desired_co2=(_downlink_payload.bytes[4] << 8) + _downlink_payload.bytes[5];
 				desired_data.desired_light=(_downlink_payload.bytes[6] << 8) + _downlink_payload.bytes[7];
 				//printf("values received: %d, %d, %d, %d \n \n",desired_data.desired_temp,desired_data.desired_hum,desired_data.desired_co2,desired_data.desired_light);
-			}
-			
+			}	
 		}
-		/*else{
-			puts("Message not sent \n");
-		}*/
 				
 		xSemaphoreGive(hardware_semaphore);
 

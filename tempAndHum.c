@@ -21,16 +21,16 @@ void tempAndHumidityTask(void* pvParameters){
 		vTaskDelay(50);
 		
 		int returnCode = hih8120_wakeup();
-		/*if(HIH8120_OK != returnCode && returnCode!= HIH8120_TWI_BUSY){
+		if(HIH8120_OK != returnCode && returnCode!= HIH8120_TWI_BUSY){
 			printf("HIH8120 wakeup error %d \n",returnCode);
-		}*/
+		}
 		
 		vTaskDelay(10);
 		
 		returnCode = hih8120_measure();
-		/*if(HIH8120_OK!=returnCode && returnCode!= HIH8120_TWI_BUSY){
+		if(HIH8120_OK!=returnCode && returnCode!= HIH8120_TWI_BUSY){
 			printf("HIH8120 measure error %d \n",returnCode);
-		}*/
+		}
 		
 		vTaskDelay(15);
 		

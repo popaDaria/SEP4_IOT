@@ -59,33 +59,33 @@ void initialiseSystem()
 	
 	//temp&hum
 	int returnCode = hih8120_initialise();
-	/*if(HIH8120_OK!=returnCode){
+	if(HIH8120_OK!=returnCode){
 		printf("HIH8120 initialize error %d \n",returnCode);
 		}
 		else {
 		puts("Humidity and Temperature driver initialized");
-	}*/
+	}
 	
 	//co2
 	mh_z19_initialise(ser_USART3);
 	mh_z19_injectCallBack(co2Callback);
-	//puts("Co2 driver started \n");
+	puts("Co2 driver started \n");
 	
 	//light 
 	returnCode = tsl2591_initialise(lightCallback);
 
-	/*if (returnCode != TSL2591_OK) {
+	if (returnCode != TSL2591_OK) {
 		printf("TSL2591 initialize error %d \n", returnCode);
 	}
 	else {
 		puts("Light driver initialized");
-	}*/
+	}
 
 	//enable light sensor
 	returnCode = tsl2591_enable();
-	/*if (returnCode != TSL2591_OK) {
+	if (returnCode != TSL2591_OK) {
 		printf("Failed to enable light sensor %d\n", returnCode);
-	}*/
+	}
 	
 	//initialise servo
 	rc_servo_initialise();
