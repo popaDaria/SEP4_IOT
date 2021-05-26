@@ -8,9 +8,11 @@ import java.util.ArrayList;
 
 @Service
 public interface ISensorDataService {
-    ArrayList<SensorEntry> getSensorEntry(HardwareUser user);
-    void sendDataToSensor(SensorEntry sensorEntry);
-    void createNewUserThread(int user_key);
-}
 
-//void createNewUserThread(HardwareUser user);
+    ArrayList<SensorEntry> getSensorEntry(HardwareUser user);
+    //ArrayList<SensorEntry> getSensorEntry(int user_key);
+    void sendDataToSensor(SensorEntry sensorEntry);
+    //void createNewUserThread(HardwareUser user);
+    void createNewUserThread(int user_key);
+    void destroyUserThread(int user_key);
+}

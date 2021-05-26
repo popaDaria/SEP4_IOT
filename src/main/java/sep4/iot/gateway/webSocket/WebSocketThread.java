@@ -12,12 +12,13 @@ public class WebSocketThread implements Runnable{
     private WebSocketClient webSocketClient;
     private int user_key;
     private ArrayList<SensorEntry> sensorEntries;
-
+    private boolean stop;
 
     public WebSocketThread(String url, int user_key) {
         webSocketClient = new WebSocketClient(url);
         this.user_key=user_key;
         sensorEntries = new ArrayList<>();
+        stop = false;
     }
 
     public synchronized int getUser_key() {
@@ -56,16 +57,20 @@ public class WebSocketThread implements Runnable{
         data+= Hex.encodeHexString(bytes);
         bb.clear();
 
-        String jsonTelegram = "{ \"cmd\" : \"tx\", \"EUI\" : \""+sensorEntry.getHweui()+"\", " +
+        String jsonTelegram = "{ \"cmd\" : \"tx\", \"EUI\" : \""+sensorEntry.getHardware_id()+"\", " +
                 "\"port\" : 2, \"confirmed\": false, \"data\" : \""+data+"\" }";
         System.out.println("SENDING: "+jsonTelegram);
         webSocketClient.sendDownLink(jsonTelegram);
     }
 
+    public synchronized void stop() {
+        stop = true;
+    }
+
     @Override
     public void run() {
 
-        while (true){
+        while (!stop){
             System.out.println("THREAD IS RUNNING FOR USER "+user_key);
             try {
                 Thread.sleep(60000);
@@ -119,7 +124,7 @@ public class WebSocketThread implements Runnable{
                     sensorEntry.setUser_key(user_key);
 
                     euiLine = euiLine.split("\"")[3];
-                    sensorEntry.setHweui(euiLine);
+                    sensorEntry.setHardware_id(euiLine);
 
                     tsLine = tsLine.split(":")[1].trim();
                     tsLine = tsLine.split(" ")[0].trim();
@@ -149,7 +154,6 @@ public class WebSocketThread implements Runnable{
                 }
             }
         }
-
     }
 
 }

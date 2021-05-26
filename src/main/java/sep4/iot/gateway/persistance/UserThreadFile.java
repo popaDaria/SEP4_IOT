@@ -1,6 +1,7 @@
 package sep4.iot.gateway.persistance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.system.ApplicationHome;
 import sep4.iot.gateway.model.HardwareUser;
 
 import java.io.File;
@@ -12,17 +13,21 @@ import java.util.Scanner;
 public class UserThreadFile {
 
     private ArrayList<HardwareUser> threads;
-    private final String filename = "C:\\FOURTH_SEMESTER\\SEP4\\CODE\\Gateway\\src\\userKeys.txt";
+    private final String filename;
     private File file;
     private ObjectMapper mapper;
 
     public UserThreadFile(){
+        filename = new ApplicationHome(this.getClass()).getDir() + "/users.json";
         threads = new ArrayList<>();
         threads = readThreadsList();
     }
-
     public void addThread(HardwareUser user){
         threads.add(user);
+        updateThreadList();
+    }
+    public void removeThread(HardwareUser user){
+        threads.remove(user);
         updateThreadList();
     }
     public ArrayList<HardwareUser> getAllThreads(){

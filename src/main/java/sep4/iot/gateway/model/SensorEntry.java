@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class SensorEntry implements Serializable {
     private int entry_key;
     private int user_key;
-    private String hweui;
+    private String hardware_id;
     private long entry_time;
 
     private float air_temperature;
@@ -31,12 +31,12 @@ public class SensorEntry implements Serializable {
     public SensorEntry() {
     }
 
-    public SensorEntry(int entry_key, String hweui, int user_key, long entry_time, float air_temperature, float air_humidity,
+    public SensorEntry(int entry_key, String hardware_id, int user_key, long entry_time, float air_temperature, float air_humidity,
                        int air_co2, float light_level, float desired_air_temperature, float desired_air_humidity,
                        int desired_air_co2, float desired_light_level) {
         this.entry_key = entry_key;
         this.user_key = user_key;
-        this.hweui = hweui;
+        this.hardware_id = hardware_id;
         this.entry_time = entry_time;
         this.air_temperature = air_temperature;
         this.air_humidity = air_humidity;
@@ -48,11 +48,11 @@ public class SensorEntry implements Serializable {
         this.desired_light_level = desired_light_level;
     }
 
-    public SensorEntry(int entry_key, int user_key, String hweui, long entry_time, float air_temperature,
+    public SensorEntry(int entry_key, int user_key, String hardware_id, long entry_time, float air_temperature,
                        float air_humidity, int air_co2, float light_level) {
         this.entry_key = entry_key;
         this.user_key = user_key;
-        this.hweui = hweui;
+        this.hardware_id = hardware_id;
         this.entry_time = entry_time;
         this.air_temperature = air_temperature;
         this.air_humidity = air_humidity;
@@ -66,12 +66,12 @@ public class SensorEntry implements Serializable {
         desired_air_temperature=0;
     }
 
-    public String getHweui() {
-        return hweui;
+    public String getHardware_id() {
+        return hardware_id;
     }
 
-    public void setHweui(String hweui) {
-        this.hweui = hweui;
+    public void setHardware_id(String hardware_id) {
+        this.hardware_id = hardware_id;
     }
 
     public float getDesired_air_temperature() {
@@ -167,7 +167,7 @@ public class SensorEntry implements Serializable {
         return "SensorEntry{" +
                 "entry_key=" + entry_key +
                 ", user_key=" + user_key +
-                ", hweui='" + hweui + '\'' +
+                ", hardware_id='" + hardware_id + '\'' +
                 ", entry_time=" + entry_time +
                 ", air_temperature=" + air_temperature +
                 ", air_humidity=" + air_humidity +

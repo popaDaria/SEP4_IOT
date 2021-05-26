@@ -71,6 +71,18 @@ public class SensorDataService implements ISensorDataService{
         }
     }
 
+    @Override
+    public void destroyUserThread(int user_key) {
+        for (WebSocketThread thread : threads)
+            if (thread.getUser_key() == user_key)
+            {
+                thread.stop();
+                threads.remove(thread);
+                persistence.removeThread(new HardwareUser(user_key, ""));
+                break;
+            }
+    }
+
     /*@Override
     public void createNewUserThread(HardwareUser user) {
         String url = "wss://iotnet.teracom.dk/app?token="+user.getAppToken()+"=";
