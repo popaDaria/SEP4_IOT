@@ -1,6 +1,6 @@
 /*
 * main.c
-* Author : popad & natmj
+* Author : popad & natalimj & mihai
 *
 */
 
@@ -95,7 +95,7 @@ void initialiseSystem()
 /*-----------------------------------------------------------*/
 int main(void)
 {
-	initialiseSystem(); // Must be done as the very first thing!!
+	initialiseSystem(); 
 	
 	
 	xTaskCreate(lora_handler_task,  "Lora task",  configMINIMAL_STACK_SIZE+200, NULL, 3 , NULL );
