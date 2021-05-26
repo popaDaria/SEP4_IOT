@@ -26,7 +26,7 @@ public class WebSocketClient implements WebSocket.Listener {
     // Send down-link message to device
     // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
     /**
-     * Method for sending a downlink message through the LoRaWAN server
+     * Method for sending a downlink message through the Loriot server
      * @param jsonTelegram - the downlink message to be sent
      */
     public void sendDownLink(String jsonTelegram) {
@@ -51,7 +51,7 @@ public class WebSocketClient implements WebSocket.Listener {
 
     // E.g. url: "wss://iotnet.teracom.dk/app?token=???="
     /**
-     * Controller used for setting up and joining the web socket connection to LoRaWAN
+     * Controller used for setting up and joining the web socket connection to Loriot
      * @param url - the URL for the socket connection
      */
     public WebSocketClient(String url) {
@@ -102,7 +102,7 @@ public class WebSocketClient implements WebSocket.Listener {
     };
 
     /**
-     * Method called when new information is heard in the LoRaWAN network server
+     * Method called when new information is heard in the Loriot network server
      * @param webSocket - the web socket connected to
      * @param data - the received data
      * @param last - a boolean representing if the message was the last one received
