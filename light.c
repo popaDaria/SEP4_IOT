@@ -2,7 +2,7 @@
  * light.c
  *
  * Created: 02.05.2021 08:24:13
- *  Author: natmj
+ *  Author: natalimj
  */ 
 
 #include <ATMEGA_FreeRTOS.h>
@@ -35,7 +35,7 @@ void lightCallback(tsl2591_returnCode_t rc) {
 	
 	if (TSL2591_OK == (rc = tsl2591_getLux(&lux)))
 	{
-		//printf("Lux: %d\n", (uint16_t)lux);
+	
 		entry_data.light = (uint16_t)lux;
 	}
 	else if (TSL2591_OVERFLOW == rc)
@@ -44,13 +44,13 @@ void lightCallback(tsl2591_returnCode_t rc) {
 	}
 	if(desired_data.desired_light>entry_data.light){
 		rc_servo_setPosition(1,100)	;
-		//printf("Motor is moving right\n");
-		//printf("Light level is turned up\n");
+		//printf("Motor is moving right\nLight level is turned up");
+
 	}
 	if(desired_data.desired_light<entry_data.light){
 		rc_servo_setPosition(1,-100)	;
-		//printf("Motor is moving left\n");
-		//printf("Light level is turned down\n");
+		//printf("Motor is moving left\nLight level is turned down");
+		
 	}
 	
 	xSemaphoreGive(hardware_semaphore);
