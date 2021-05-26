@@ -1,7 +1,7 @@
 /*
 * loraWANHandler.c
 *
-*  Author: popad & mihai
+*  Author: popad & mihai & natalimj
 */
 #include <stddef.h>
 #include <stdio.h>
@@ -77,7 +77,7 @@ static void _lora_setup(void)
 
 	if (rc == LORA_ACCEPTED)
 	{
-		// Connected to LoRaWAN :-)
+		
 		//puts("Connection succeeded \n");
 	}
 	else
