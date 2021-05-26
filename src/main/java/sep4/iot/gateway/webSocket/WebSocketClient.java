@@ -2,7 +2,6 @@ package sep4.iot.gateway.webSocket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.WebSocket;
@@ -11,6 +10,14 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
+/**
+ * WebSocket listener class used for the connection between the
+ * Gateway server and Loriot server
+ *
+ * @author Daria Popa
+ * @version 1.0
+ * @since 26-05-2021
+ */
 public class WebSocketClient implements WebSocket.Listener {
 
     private WebSocket server = null;
@@ -18,10 +25,19 @@ public class WebSocketClient implements WebSocket.Listener {
 
     // Send down-link message to device
     // Must be in Json format according to https://github.com/ihavn/IoT_Semester_project/blob/master/LORA_NETWORK_SERVER.md
+    /**
+     * Method for sending a downlink message through the LoRaWAN server
+     * @param jsonTelegram - the downlink message to be sent
+     */
     public void sendDownLink(String jsonTelegram) {
         server.sendText(jsonTelegram,true);
     }
 
+    /**
+     * Method used to return one new data String form the list.
+     * Acts like a queue - FIFO.
+     * @return - the oldest data String from the list
+     */
     public String getUpLink(){
         String ret=null ;
         if(list!=null){
@@ -33,7 +49,11 @@ public class WebSocketClient implements WebSocket.Listener {
         return ret;
     }
 
-    // E.g. url: "wss://iotnet.teracom.dk/app?token=??????????????????????????????????????????????="
+    // E.g. url: "wss://iotnet.teracom.dk/app?token=???="
+    /**
+     * Controller used for setting up and joining the web socket connection to LoRaWAN
+     * @param url - the URL for the socket connection
+     */
     public WebSocketClient(String url) {
         list = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
@@ -80,6 +100,14 @@ public class WebSocketClient implements WebSocket.Listener {
         System.out.println(message.asCharBuffer().toString());
         return new CompletableFuture().completedFuture("Pong completed.").thenAccept(System.out::println);
     };
+
+    /**
+     * Method called when new information is heard in the LoRaWAN network server
+     * @param webSocket - the web socket connected to
+     * @param data - the received data
+     * @param last - a boolean representing if the message was the last one received
+     * @return a completion stage action i.e printing out a message
+     */
     //onText()
     public CompletionStage<?> onText(WebSocket webSocket, CharSequence data, boolean last) {
         String indented = null;

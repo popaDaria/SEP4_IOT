@@ -10,6 +10,13 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
+/**
+ * Implementation of the Sensor service interface
+ *
+ * @author Daria Popa
+ * @version 1.0
+ * @since 26-05-2021
+ */
 @Service
 public class SensorDataService implements ISensorDataService{
 
@@ -17,6 +24,9 @@ public class SensorDataService implements ISensorDataService{
     private final UserThreadFile persistence;
     private static ArrayList<WebSocketThread> threads = new ArrayList<>();
 
+    /**
+     * Controller used to initialise the persistence and listening threads
+     */
     public SensorDataService() {
         if(executorService==null)
             executorService=new ScheduledThreadPoolExecutor(10); //base size for now
@@ -24,6 +34,11 @@ public class SensorDataService implements ISensorDataService{
         initialiseThreads();
     }
 
+    /**
+     * Method used to start the WebSocketThreads for the users saved in the local persistence
+     *
+     * @version hardcoded URL
+     */
     private void initialiseThreads(){
         for (HardwareUser user: persistence.getAllThreads()) {
             String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
@@ -33,6 +48,11 @@ public class SensorDataService implements ISensorDataService{
         }
     }
 
+    /**
+     * Getter for the sensor data from a user's threads
+     * @param user - the user for which the data is requested
+     * @return an ArrayList with the SensorEntry elements
+     */
     @Override
     public ArrayList<SensorEntry> getSensorEntry(HardwareUser user) {
         ArrayList<SensorEntry> info = new ArrayList<>();
@@ -46,6 +66,10 @@ public class SensorDataService implements ISensorDataService{
         return info;
     }
 
+    /**
+     * Method for sending data to the hardware
+     * @param sensorEntry - object containing the information needed to construct the downlink
+     */
     @Override
     public void sendDataToSensor(SensorEntry sensorEntry) {
         for (WebSocketThread hd: threads) {
@@ -56,9 +80,13 @@ public class SensorDataService implements ISensorDataService{
         }
     }
 
+    /**
+     * Method for creating and starting a new user's listening thread
+     * @param user_key - the unique key of the new user
+     * @version hardcoded URL
+     */
     @Override
     public void createNewUserThread(int user_key) {
-        //hardcoded url for now
         if(!persistence.isUserThreadStarted(user_key)) {
             String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
             HardwareUser user = new HardwareUser(user_key, "vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0");
@@ -71,6 +99,10 @@ public class SensorDataService implements ISensorDataService{
         }
     }
 
+    /**
+     * Method used to remove a user's thread
+     * @param user_key - the unique key of the user
+     */
     @Override
     public void destroyUserThread(int user_key) {
         for (WebSocketThread thread : threads)
@@ -83,10 +115,4 @@ public class SensorDataService implements ISensorDataService{
             }
     }
 
-    /*@Override
-    public void createNewUserThread(HardwareUser user) {
-        String url = "wss://iotnet.teracom.dk/app?token="+user.getAppToken()+"=";
-        webSocketThread=new WebSocketThread(url,user.getUser_key());
-        executorService.submit(webSocketThread);
-    }*/
 }

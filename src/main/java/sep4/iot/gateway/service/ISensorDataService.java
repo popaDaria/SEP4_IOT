@@ -6,13 +6,18 @@ import sep4.iot.gateway.model.SensorEntry;
 
 import java.util.ArrayList;
 
-@Service
+/**
+ * Sensor service interface
+ *
+ * @author Mihai Anghelus
+ * @author Daria Popa
+ * @version 1.0
+ * @since 26-05-2021
+ */
 public interface ISensorDataService {
 
     ArrayList<SensorEntry> getSensorEntry(HardwareUser user);
-    //ArrayList<SensorEntry> getSensorEntry(int user_key);
     void sendDataToSensor(SensorEntry sensorEntry);
-    //void createNewUserThread(HardwareUser user);
     void createNewUserThread(int user_key);
     void destroyUserThread(int user_key);
 }

@@ -3,10 +3,17 @@ package sep4.iot.gateway.webSocket;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import sep4.iot.gateway.model.SensorEntry;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+/**
+ * Runnable class used to manage the transmission of information between
+ * the socket client and the service classes
+ *
+ * @author Daria Popa
+ * @version 1.0
+ * @since 26-05-2021
+ */
 public class WebSocketThread implements Runnable{
 
     private WebSocketClient webSocketClient;
@@ -14,6 +21,11 @@ public class WebSocketThread implements Runnable{
     private ArrayList<SensorEntry> sensorEntries;
     private boolean stop;
 
+    /**
+     * Controller used to start the web socket connection for the user
+     * @param url - the user's URL created with the unique app token
+     * @param user_key - the user's unique key used to differentiate threads
+     */
     public WebSocketThread(String url, int user_key) {
         webSocketClient = new WebSocketClient(url);
         this.user_key=user_key;
@@ -21,18 +33,33 @@ public class WebSocketThread implements Runnable{
         stop = false;
     }
 
+    /**
+     * Getter for the user key
+     * @return an integer value representing the user_key value
+     */
     public synchronized int getUser_key() {
         return user_key;
     }
 
+    /**
+     * Method for returning all the saved sensor data
+     * @return an ArrayList of SensorEntry objects
+     */
     public synchronized ArrayList<SensorEntry> getSensorEntries() {
         return sensorEntries;
     }
 
+    /**
+     * Method for emptying the list of sensor entries
+     */
     public synchronized void clearSensorEntries() {
         sensorEntries.clear();
     }
 
+    /**
+     * Method for constructing and sending a jsonTelegram to the hardware
+     * @param sensorEntry - the object containing the needed information to construct the downlink message
+     */
     public synchronized void sendSensorData(SensorEntry sensorEntry){
 
         String data = "";
@@ -63,10 +90,18 @@ public class WebSocketThread implements Runnable{
         webSocketClient.sendDownLink(jsonTelegram);
     }
 
+    /**
+     * Method for setting the stop flag of the thread to true
+     */
     public synchronized void stop() {
         stop = true;
     }
 
+    /**
+     * Thread's run method, running indefinitely, until the stop flag is set to true;
+     * The method periodically asks the socket for new information and if any, saves
+     * it to the list of SensorEntries
+     */
     @Override
     public void run() {
 
@@ -150,7 +185,6 @@ public class WebSocketThread implements Runnable{
 
                     System.out.println("RECEIVED SENSOR ENTRY: " + sensorEntry.toString());
                     sensorEntries.add(sensorEntry);
-                    System.out.println("LIST SIZE: " + sensorEntries.size());
                 }
             }
         }
