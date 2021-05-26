@@ -2,7 +2,7 @@
  * motor.c
  *
  * Created: 04.05.2021 13:51:49
- *  Author: popad
+ *  Author: natalimj
  */ 
 
 #include <ATMEGA_FreeRTOS.h>
@@ -16,7 +16,7 @@ void humMotorTask(void* pvParameters) {
 	(void) pvParameters;
 	
 	while (1) {
-		//vTaskDelay(100);
+		
 		
 		xSemaphoreTake(hardware_semaphore, portMAX_DELAY);
 		
