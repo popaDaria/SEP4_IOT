@@ -18,7 +18,7 @@ public class UserThreadFile {
 
     public UserThreadFile(){
         threads = new ArrayList<>();
-        threads=readThreadsList();
+        threads = readThreadsList();
     }
 
     public void addThread(HardwareUser user){

@@ -13,7 +13,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 @Service
 public class SensorDataService implements ISensorDataService{
 
-    //private WebSocketThread webSocketThread;
     public static ExecutorService executorService ;
     private final UserThreadFile persistence;
     private static ArrayList<WebSocketThread> threads = new ArrayList<>();

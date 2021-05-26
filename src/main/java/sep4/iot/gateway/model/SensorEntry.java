@@ -1,8 +1,17 @@
 package sep4.iot.gateway.model;
-
 import java.io.Serializable;
-import java.util.Date;
 
+
+/**
+ * SensorEntry object is the container for the data received from Loriot as an uplink
+ * and data to be sent to Loriot as a downlink
+ *
+ * @see java.io.Serializable
+ * @author Mihai Anghelus
+ * @author Daria Popa
+ * @version 1.0
+ * @since 26-05-2021
+ */
 public class SensorEntry implements Serializable {
     private int entry_key;
     private int user_key;

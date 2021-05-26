@@ -8,13 +8,31 @@ import sep4.iot.gateway.service.SensorDataService;
 
 import java.util.ArrayList;
 
+/**
+ * The Sensor Controller handles the requests coming from the Data server,
+ * and sends them forward to the service to be processed.
+ *
+ * @author Daria Popa
+ * @author Mihai Anghelus
+ * @version 1.0
+ * @since 26-05-2021
+ */
+
 @RestController
 @RequestMapping("/SensorData")
 public class SensorDataController {
 
+    /**
+     * @param service - The Sensor Service is instantiated in the controller through the use of dependency injection
+     */
     @Autowired
     SensorDataService service;
 
+    /**
+     * HTTP GET controller method
+     * @param user - the user for which the sensor data is required
+     * @return ArrayList of SensorEntry elements or an empty list on exception caught
+     */
     //CRUD-Retrieve
     @GetMapping
     public ArrayList<SensorEntry> getSensorEntry(@RequestBody final HardwareUser user){
@@ -23,22 +41,30 @@ public class SensorDataController {
             return entry;
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return null;
+            return new ArrayList<>();
         }
     }
 
+    /**
+     * HTTP POST controller method for sending downlink messages
+     * @param sensorEntry - object containing the information needed to send a downlink
+     */
     //CRUD-Create
     @RequestMapping("/updateData")
     @PostMapping
     public void sendDataToSensor(@RequestBody final SensorEntry sensorEntry){
         try {
             service.sendDataToSensor(sensorEntry);
-            //System.out.println("SAW POST:"+sensorEntry.toString());
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * HTTP POST controller method for starting new listening threads
+     * @param user_key - the unique user key needed to create a new listening user thread
+     * @version hardcoded user token/URL
+     */
     //CRUD-Create
     @PostMapping("/{user_key}")
     @ResponseBody
@@ -50,14 +76,5 @@ public class SensorDataController {
             System.out.println(e.getMessage());
         }
     }
-
-/*    @PostMapping
-    public void createNewUserThread(@RequestBody final HardwareUser user){
-        try {
-            service.createNewUserThread(user);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-    }*/
 
 }
