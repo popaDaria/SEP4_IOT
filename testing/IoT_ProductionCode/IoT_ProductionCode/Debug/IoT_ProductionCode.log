@@ -1,0 +1,8 @@
+﻿co2.obj : error LNK2019: unresolved external symbol _xSemaphoreGive referenced in function _co2Callback
+co2.obj : error LNK2019: unresolved external symbol _xSemaphoreTake referenced in function _co2Callback
+co2.obj : error LNK2019: unresolved external symbol _mh_z19_initialise referenced in function _co2_init
+co2.obj : error LNK2019: unresolved external symbol _mh_z19_injectCallBack referenced in function _co2_init
+co2.obj : error LNK2019: unresolved external symbol _mh_z19_takeMeassuring referenced in function _co2_run
+co2.obj : error LNK2019: unresolved external symbol _vTaskDelay referenced in function _co2_run
+MSVCRTD.lib(exe_main.obj) : error LNK2019: unresolved external symbol _main referenced in function "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+C:\FOURTH_SEMESTER\SEP4\CODE\IoT_Testing\IoT_ProductionCode\Debug\IoT_ProductionCode.exe : fatal error LNK1120: 7 unresolved externals
