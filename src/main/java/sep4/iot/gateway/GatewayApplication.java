@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Collections;
 
+/**
+ * Main class for the SpringBoot based Web Application
+ */
 @SpringBootApplication
 public class GatewayApplication {
 
@@ -13,6 +16,4 @@ public class GatewayApplication {
         app.setDefaultProperties(Collections.singletonMap("server.port", "41003"));
         app.run(args);
     }
-
-    //SensorEntry sensorEntry = new SensorEntry(1,"sdsfd",2,1343567654,23,23,23,23,24,26,123,320);
 }
