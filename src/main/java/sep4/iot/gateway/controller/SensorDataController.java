@@ -51,6 +51,18 @@ public class SensorDataController {
         }
     }
 
+    //CRUD-Delete
+    @DeleteMapping("/{user_key}")
+    @ResponseBody
+    public void destroyUserThread(@PathVariable("user_key") final String user_key){
+        try {
+            int id = Integer.parseInt(user_key);
+            service.destroyUserThread(id);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 /*    @PostMapping
     public void createNewUserThread(@RequestBody final HardwareUser user){
         try {

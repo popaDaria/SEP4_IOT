@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class HardwareUser implements Serializable {
     private int user_key;
-    private String appToken;
+    private String user_token;
 
     public HardwareUser(){
 
     }
-    public HardwareUser(int user_key, String appToken) {
+    public HardwareUser(int user_key, String user_token) {
         this.user_key = user_key;
-        this.appToken = appToken;
+        this.user_token = user_token;
     }
 
     public int getUser_key() {
@@ -22,11 +22,18 @@ public class HardwareUser implements Serializable {
         this.user_key = user_key;
     }
 
-    public String getAppToken() {
-        return appToken;
+    public String getUser_token() {
+        return user_token;
     }
 
-    public void setAppToken(String appToken) {
-        this.appToken = appToken;
+    public void setUser_token(String user_token) {
+        this.user_token = user_token;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof HardwareUser))
+            return false;
+        return ((HardwareUser) object).user_key == user_key;
     }
 }
