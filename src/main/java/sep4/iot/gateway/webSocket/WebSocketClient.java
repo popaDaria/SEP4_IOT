@@ -15,6 +15,7 @@ import java.util.concurrent.CompletionStage;
  * Gateway server and Loriot server
  *
  * @author Daria Popa
+ * @author Natali Munk-Jakobsen
  * @version 1.0
  * @since 26-05-2021
  */

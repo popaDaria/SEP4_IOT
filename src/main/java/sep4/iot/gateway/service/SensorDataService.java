@@ -14,6 +14,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * Implementation of the Sensor service interface
  *
  * @author Daria Popa
+ * @author Natali Munk-Jakobsen
  * @version 1.0
  * @since 26-05-2021
  */
