@@ -1,6 +1,5 @@
 package sep4.iot.gateway.service;
 
-import org.springframework.stereotype.Service;
 import sep4.iot.gateway.model.HardwareUser;
 import sep4.iot.gateway.model.SensorEntry;
 
@@ -16,8 +15,8 @@ import java.util.ArrayList;
  */
 public interface ISensorDataService {
 
-    ArrayList<SensorEntry> getSensorEntry(HardwareUser user);
+    ArrayList<SensorEntry> getSensorEntry(int userKey);
     void sendDataToSensor(SensorEntry sensorEntry);
-    void createNewUserThread(int user_key);
+    void createNewUserThread(HardwareUser user);
     void destroyUserThread(int user_key);
 }

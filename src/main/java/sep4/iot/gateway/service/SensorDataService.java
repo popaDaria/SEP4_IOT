@@ -3,7 +3,7 @@ package sep4.iot.gateway.service;
 import org.springframework.stereotype.Service;
 import sep4.iot.gateway.model.HardwareUser;
 import sep4.iot.gateway.model.SensorEntry;
-import sep4.iot.gateway.persistance.UserThreadFile;
+import sep4.iot.gateway.persistence.UserThreadFile;
 import sep4.iot.gateway.webSocket.WebSocketThread;
 
 import java.util.ArrayList;
@@ -37,28 +37,30 @@ public class SensorDataService implements ISensorDataService{
 
     /**
      * Method used to start the WebSocketThreads for the users saved in the local persistence
-     *
-     * @version hardcoded URL
      */
     private void initialiseThreads(){
-        for (HardwareUser user: persistence.getAllThreads()) {
-            String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
-            WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
-            threads.add(webSocketThread);
-            executorService.submit(webSocketThread);
+        try {
+            for (HardwareUser user: persistence.getAllThreads()) {
+                String url = "wss://iotnet.teracom.dk/app?token="+user.getUser_token()+"=";
+                WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
+                threads.add(webSocketThread);
+                executorService.submit(webSocketThread);
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
     /**
      * Getter for the sensor data from a user's threads
-     * @param user - the user for which the data is requested
+     * @param userKey - the user for which the data is requested
      * @return an ArrayList with the SensorEntry elements
      */
     @Override
-    public ArrayList<SensorEntry> getSensorEntry(HardwareUser user) {
+    public ArrayList<SensorEntry> getSensorEntry(int userKey) {
         ArrayList<SensorEntry> info = new ArrayList<>();
         for (WebSocketThread hd: threads) {
-            if(hd.getUser_key()==user.getUser_key()){
+            if(hd.getUser_key()==userKey){
                 info.addAll(hd.getSensorEntries());
                 hd.clearSensorEntries();
                 return info;
@@ -83,20 +85,18 @@ public class SensorDataService implements ISensorDataService{
 
     /**
      * Method for creating and starting a new user's listening thread
-     * @param user_key - the unique key of the new user
-     * @version hardcoded URL
+     * @param user - the unique key and token of the new user
      */
     @Override
-    public void createNewUserThread(int user_key) {
-        if(!persistence.isUserThreadStarted(user_key)) {
-            String url = "wss://iotnet.teracom.dk/app?token=vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0=";
-            HardwareUser user = new HardwareUser(user_key, "vnoTvgAAABFpb3RuZXQuY2liaWNvbS5ka4OBbRiJLnlvbW8x7gEMUs0");
+    public void createNewUserThread(HardwareUser user) {
+        if(!persistence.isUserThreadStarted(user.getUser_key())) {
+            String url = "wss://iotnet.teracom.dk/app?token="+user.getUser_token()+"=";
             persistence.addThread(user);
-            WebSocketThread webSocketThread = new WebSocketThread(url, user_key);
+            WebSocketThread webSocketThread = new WebSocketThread(url, user.getUser_key());
             threads.add(webSocketThread);
             executorService.submit(webSocketThread);
         }else{
-            System.out.println("THREAD ALREADY STARTED FOR USER "+user_key+"!!!");
+            System.out.println("THREAD ALREADY STARTED FOR USER "+user.getUser_key()+"!!!");
         }
     }
 
@@ -106,14 +106,15 @@ public class SensorDataService implements ISensorDataService{
      */
     @Override
     public void destroyUserThread(int user_key) {
+        persistence.removeThread(new HardwareUser(user_key, ""));
         for (WebSocketThread thread : threads)
             if (thread.getUser_key() == user_key)
             {
                 thread.stop();
                 threads.remove(thread);
-                persistence.removeThread(new HardwareUser(user_key, ""));
                 break;
             }
+
     }
 
 }

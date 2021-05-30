@@ -17,7 +17,6 @@ import java.util.ArrayList;
  * @since 26-05-2021
  */
 @RestController
-@RequestMapping("/SensorData")
 public class SensorDataController {
 
     /**
@@ -28,15 +27,16 @@ public class SensorDataController {
 
     /**
      * HTTP GET controller method
-     * @param user - the user for which data is requested
+     * @param user_key - the user for which data is requested
      * @return an <b>ArrayList of SensorEntry</b> elements for the specified user,
      * or an empty list on exception caught
      */
     //CRUD-Retrieve
-    @GetMapping
-    public ArrayList<SensorEntry> getSensorEntry(@RequestBody final HardwareUser user){
+    @GetMapping("/hardware/{user_key}")
+    public ArrayList<SensorEntry> getSensorEntry(@PathVariable("user_key") final String user_key){
         try {
-            ArrayList<SensorEntry> entry = service.getSensorEntry(user);
+            int id = Integer.parseInt(user_key);
+            ArrayList<SensorEntry> entry = service.getSensorEntry(id);
             return entry;
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -50,8 +50,7 @@ public class SensorDataController {
      *                    a downlink message (i.e: desired value and HEWUI)
      */
     //CRUD-Create
-    @RequestMapping("/updateData")
-    @PostMapping
+    @PostMapping("/hardware")
     public void sendDataToSensor(@RequestBody final SensorEntry sensorEntry){
         try {
             service.sendDataToSensor(sensorEntry);
@@ -62,16 +61,13 @@ public class SensorDataController {
 
     /**
      * HTTP POST controller method for starting a listening thread for a new user
-     * @param user_key - the unique user key used to start and identify threads
-     * @version hardcoded user token
+     * @param user - the unique user key and loriot token used to start and identify threads
      */
     //CRUD-Create
-    @PostMapping("/{user_key}")
-    @ResponseBody
-    public void createNewUserThread(@PathVariable("user_key") final String user_key){
+    @PostMapping("/user")
+    public void createNewUserThread(@RequestBody final HardwareUser user){
         try {
-            int id = Integer.parseInt(user_key);
-            service.createNewUserThread(id);
+            service.createNewUserThread(user);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -82,8 +78,7 @@ public class SensorDataController {
      * @param user_key - the unique identification number of the user and thread
      */
     //CRUD-Delete
-    @DeleteMapping("/{user_key}")
-    @ResponseBody
+    @DeleteMapping("/user/{user_key}")
     public void destroyUserThread(@PathVariable("user_key") final String user_key){
         try {
             int id = Integer.parseInt(user_key);

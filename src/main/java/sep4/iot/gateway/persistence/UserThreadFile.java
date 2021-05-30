@@ -1,4 +1,4 @@
-package sep4.iot.gateway.persistance;
+package sep4.iot.gateway.persistence;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.system.ApplicationHome;
@@ -29,7 +29,7 @@ public class UserThreadFile {
      * Constructor used to initialise the hardware user threads list
      */
     public UserThreadFile(){
-        filename = new ApplicationHome(this.getClass()).getDir() + "/users.json";
+        filename = new ApplicationHome(this.getClass()).getDir() + "/users.txt";
         threads = new ArrayList<>();
         threads = readThreadsList();
     }
