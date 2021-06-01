@@ -68,6 +68,10 @@ public class WebSocketClient implements WebSocket.Listener {
         server.abort();
     }
 
+    /**
+     * Method called when the connection is opened successfully
+     * @param webSocket the web socket to which the connection was established
+     */
     //onOpen()
     public void onOpen(WebSocket webSocket) {
         // This WebSocket will invoke onText, onBinary, onPing, onPong or onClose methods on the associated listener (i.e. receive methods) up to n more times
@@ -75,18 +79,38 @@ public class WebSocketClient implements WebSocket.Listener {
         System.out.println("WebSocket Listener has been opened for requests.");
     }
 
+    /**
+     * Method called if an error occurs in the server side
+     * @param webSocket the web socket through which the connection is established
+     * @param error the error thrown by the server
+     */
     //onError()
     public void onError(WebSocket webSocket, Throwable error) {
         System.out.println("A " + error.getCause() + " exception was thrown.");
         System.out.println("Message: " + error.getLocalizedMessage());
        // webSocket.abort();
     };
+
+    /**
+     * Method called when the connection is closed
+     * @param webSocket the web socket where the connection was closed
+     * @param statusCode the status code for the closing error/message
+     * @param reason the reason the connection was closed
+     * @return a completion stage which prints out a message in the console at the end
+     */
     //onClose()
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
         System.out.println("WebSocket closed!");
         System.out.println("Status:" + statusCode + " Reason: " + reason);
         return new CompletableFuture().completedFuture("onClose() completed.").thenAccept(System.out::println);
     };
+
+    /**
+     * Method for pinging the server
+     * @param webSocket the web socket which holds the connection
+     * @param message the pinged message
+     * @return a completion stage which prints out a message in the console to indicate method completion
+     */
     //onPing()
     public CompletionStage<?> onPing(WebSocket webSocket, ByteBuffer message) {
         webSocket.request(1);
@@ -94,6 +118,13 @@ public class WebSocketClient implements WebSocket.Listener {
         System.out.println(message.asCharBuffer().toString());
         return new CompletableFuture().completedFuture("Ping completed.").thenAccept(System.out::println);
     };
+
+    /**
+     * Method for receiving a pong from the server
+     * @param webSocket the web socket which holds the connection
+     * @param message the received message
+     * @return a completion stage which prints out a message in the console to indicate method completion
+     */
     //onPong()
     public CompletionStage<?> onPong(WebSocket webSocket, ByteBuffer message) {
         webSocket.request(1);

@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @since 26-05-2021
  */
 @RestController
+//@RequestMapping("/SensorData")
 public class SensorDataController {
 
     /**
