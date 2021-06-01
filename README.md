@@ -1,6 +1,6 @@
 # SEP4_IOT
 
-Instalaion guide 
+Installation guide 
 
 In "LoRaWANHAndler.c" set the LORA_appEUI and LORA_appKEY to your keys provided by the admin
 
